@@ -159,3 +159,4 @@ Investigate why refresh appeared stuck at `04-places-heritage` and address the k
 - Added stable nested tile path labels so every individual sub-tile fetch is visible in the terminal output.
 - Added explicit interrupt handling so `refresh-status.json` records an `interrupted` run instead of only showing a traceback.
 - Added a deeper tile subdivision override for `05-buildings-near-riverbanks` to improve its chance of finishing.
+- Added configurable per-query tile grids so heavy queries can start with much smaller tiles, with `05-buildings-near-riverbanks` now starting at `4x4`.

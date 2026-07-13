@@ -146,6 +146,7 @@ def fetch_query_payload(
     settings: dict, template: str, query_context: dict[str, str], query_name: str
 ) -> tuple[dict, dict]:
     max_depth = max_tile_subdivision_depth(settings, query_name)
+    initial_tile_grid = tile_grid_for_query(settings, query_name, current_depth=1)
     if should_tile_first(settings, query_name):
         payload, tile_count = fetch_tiled_payload(
             settings,
@@ -154,8 +155,9 @@ def fetch_query_payload(
             query_name=query_name,
             max_depth=max_depth,
             current_depth=1,
+            tile_grid=initial_tile_grid,
         )
-        return payload, {"mode": "tiled", "tile_count": tile_count}
+        return payload, {"mode": "tiled", "tile_count": tile_count, "initial_tile_grid": initial_tile_grid}
 
     rendered_query = render_query(template, query_context)
     try:
@@ -171,8 +173,9 @@ def fetch_query_payload(
         query_name=query_name,
         max_depth=max_depth,
         current_depth=1,
+        tile_grid=initial_tile_grid,
     )
-    return payload, {"mode": "tiled", "tile_count": tile_count}
+    return payload, {"mode": "tiled", "tile_count": tile_count, "initial_tile_grid": initial_tile_grid}
 
 
 def should_tile_first(settings: dict, query_name: str) -> bool:
@@ -199,30 +202,30 @@ def render_query(template: str, context: dict[str, str]) -> str:
     return query
 
 
-def split_bbox_context(context: dict[str, str]) -> list[dict[str, str]]:
+def split_bbox_context(context: dict[str, str], tile_grid: tuple[int, int]) -> list[dict[str, str]]:
     south = float(context["bbox_south"])
     west = float(context["bbox_west"])
     north = float(context["bbox_north"])
     east = float(context["bbox_east"])
-    mid_lat = (south + north) / 2
-    mid_lon = (west + east) / 2
-    bboxes = [
-        (south, west, mid_lat, mid_lon),
-        (south, mid_lon, mid_lat, east),
-        (mid_lat, west, north, mid_lon),
-        (mid_lat, mid_lon, north, east),
-    ]
+    rows, cols = tile_grid
+    lat_step = (north - south) / rows
+    lon_step = (east - west) / cols
     contexts: list[dict[str, str]] = []
-    for bbox_south, bbox_west, bbox_north, bbox_east in bboxes:
-        contexts.append(
-            {
-                **context,
-                "bbox_south": f"{bbox_south:.6f}",
-                "bbox_west": f"{bbox_west:.6f}",
-                "bbox_north": f"{bbox_north:.6f}",
-                "bbox_east": f"{bbox_east:.6f}",
-            }
-        )
+    for row in range(rows):
+        for col in range(cols):
+            bbox_south = south + (lat_step * row)
+            bbox_west = west + (lon_step * col)
+            bbox_north = north if row == rows - 1 else south + (lat_step * (row + 1))
+            bbox_east = east if col == cols - 1 else west + (lon_step * (col + 1))
+            contexts.append(
+                {
+                    **context,
+                    "bbox_south": f"{bbox_south:.6f}",
+                    "bbox_west": f"{bbox_west:.6f}",
+                    "bbox_north": f"{bbox_north:.6f}",
+                    "bbox_east": f"{bbox_east:.6f}",
+                }
+            )
     return contexts
 
 
@@ -233,6 +236,7 @@ def fetch_tiled_payload(
     query_name: str,
     max_depth: int,
     current_depth: int,
+    tile_grid: tuple[int, int],
     tile_path: tuple[int, ...] = (),
 ) -> tuple[dict, int]:
     merged_elements: dict[tuple[str, int], dict] = {}
@@ -240,30 +244,34 @@ def fetch_tiled_payload(
     remarks: list[str] = []
     tile_count = 0
 
-    for tile_index, tile_context in enumerate(split_bbox_context(context), start=1):
+    tile_contexts = split_bbox_context(context, tile_grid)
+    rows, cols = tile_grid
+    for tile_index, tile_context in enumerate(tile_contexts, start=1):
         tile_query = render_query(template, tile_context)
         current_tile_path = (*tile_path, tile_index)
         tile_path_label = ".".join(str(part) for part in current_tile_path)
         print(
             "TILE: "
-            f"{query_name} depth={current_depth}/{max_depth} path={tile_path_label} tile={tile_index}/4 "
+            f"{query_name} depth={current_depth}/{max_depth} path={tile_path_label} tile={tile_index}/{len(tile_contexts)} "
+            f"grid={rows}x{cols} "
             f"bbox={tile_context['bbox_south']},{tile_context['bbox_west']},{tile_context['bbox_north']},{tile_context['bbox_east']}"
         )
         try:
             payload = fetch_overpass(settings, tile_query)
             tile_count += 1
             print(
-                f"TILE FETCHED: {query_name} depth={current_depth}/{max_depth} path={tile_path_label} tile={tile_index}/4 "
+                f"TILE FETCHED: {query_name} depth={current_depth}/{max_depth} path={tile_path_label} tile={tile_index}/{len(tile_contexts)} "
+                f"grid={rows}x{cols} "
                 f"({len(payload.get('elements', []))} elements)"
             )
         except OverpassFetchError as error:
             if not error.retryable or current_depth >= max_depth:
                 print(
-                    f"TILE FAILED: {query_name} depth={current_depth}/{max_depth} path={tile_path_label} tile={tile_index}/4 -> {error}"
+                    f"TILE FAILED: {query_name} depth={current_depth}/{max_depth} path={tile_path_label} tile={tile_index}/{len(tile_contexts)} grid={rows}x{cols} -> {error}"
                 )
                 raise
             print(
-                f"TILE RETRYING VIA SUBDIVISION: {query_name} depth={current_depth}/{max_depth} path={tile_path_label} tile={tile_index}/4 -> {error}"
+                f"TILE RETRYING VIA SUBDIVISION: {query_name} depth={current_depth}/{max_depth} path={tile_path_label} tile={tile_index}/{len(tile_contexts)} grid={rows}x{cols} -> {error}"
             )
             payload, nested_tile_count = fetch_tiled_payload(
                 settings,
@@ -272,6 +280,7 @@ def fetch_tiled_payload(
                 query_name=query_name,
                 max_depth=max_depth,
                 current_depth=current_depth + 1,
+                tile_grid=tile_grid_for_query(settings, query_name, current_depth=current_depth + 1),
                 tile_path=current_tile_path,
             )
             tile_count += nested_tile_count
@@ -353,6 +362,28 @@ def max_tile_subdivision_depth(settings: dict, query_name: str) -> int:
     if override is not None:
         return int(override)
     return int(settings.get("maxTileSubdivisionDepth", 2))
+
+
+def tile_grid_for_query(settings: dict, query_name: str, current_depth: int) -> tuple[int, int]:
+    per_query = settings.get("queryTileGrids") or {}
+    grid_value = per_query.get(query_name)
+    if isinstance(grid_value, list) and len(grid_value) >= current_depth:
+        return normalize_tile_grid(grid_value[current_depth - 1])
+    if grid_value is not None and not isinstance(grid_value, list):
+        return normalize_tile_grid(grid_value)
+
+    default_grid = settings.get("tileGridByDepth") or {}
+    return normalize_tile_grid(default_grid.get(str(current_depth), [2, 2]))
+
+
+def normalize_tile_grid(value: object) -> tuple[int, int]:
+    if not isinstance(value, list) or len(value) != 2:
+        raise ValueError(f"Invalid tile grid setting: {value!r}")
+    rows = int(value[0])
+    cols = int(value[1])
+    if rows < 1 or cols < 1:
+        raise ValueError(f"Tile grid values must be positive: {value!r}")
+    return rows, cols
 
 
 if __name__ == "__main__":

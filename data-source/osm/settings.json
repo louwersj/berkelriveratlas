@@ -10,8 +10,20 @@
   "overpassTimeoutSeconds": 180,
   "requestDelaySeconds": 2.0,
   "maxTileSubdivisionDepth": 2,
+  "tileGridByDepth": {
+    "1": [2, 2],
+    "2": [2, 2],
+    "3": [2, 2]
+  },
   "queryMaxTileSubdivisionDepth": {
     "05-buildings-near-riverbanks": 3
+  },
+  "queryTileGrids": {
+    "05-buildings-near-riverbanks": [
+      [4, 4],
+      [3, 3],
+      [2, 2]
+    ]
   },
   "maxRequestRetries": 3,
   "retryBackoffSeconds": 5.0,
