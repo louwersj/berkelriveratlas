@@ -184,3 +184,20 @@ Move beyond whole-layer GeoJSON storage and implement a structure that stores an
 
 - The current large-layer tile grid is `16x16`, which keeps tracked tile files under the repo size cap while remaining small enough for bbox-based access.
 - Tile manifests are now explicit for all `256` cells in the `16x16` grid, including empty tiles, so the layout is fully predictable for downstream tooling and runtime logic.
+
+## 2026-07-13 Fetch And Storage Tile Alignment
+
+### Session Summary
+
+Aligned the Overpass fetch workflow with the same explicit `16x16` grid model used by generated spatial storage.
+
+### User Request
+
+Make sure the fixed `16x16` tile structure is included in both fetching and the backend-style pipeline workflow.
+
+### Work Completed
+
+- Updated `data-source/osm/settings.json` so heavy tiled fetch queries now start on an explicit `16x16` first-pass grid.
+- Extended fetch metadata so refresh outputs record the tile grid sequence used for each tiled query.
+- Applied the aligned fetch grid model to the heavy tiled Overpass queries.
+- Updated project docs so the fetch path and generated storage path are described as one coordinated spatial tiling model.

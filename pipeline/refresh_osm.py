@@ -147,6 +147,7 @@ def fetch_query_payload(
 ) -> tuple[dict, dict]:
     max_depth = max_tile_subdivision_depth(settings, query_name)
     initial_tile_grid = tile_grid_for_query(settings, query_name, current_depth=1)
+    tile_grid_sequence = tile_grid_sequence_for_query(settings, query_name, max_depth)
     if should_tile_first(settings, query_name):
         payload, tile_count = fetch_tiled_payload(
             settings,
@@ -157,7 +158,12 @@ def fetch_query_payload(
             current_depth=1,
             tile_grid=initial_tile_grid,
         )
-        return payload, {"mode": "tiled", "tile_count": tile_count, "initial_tile_grid": initial_tile_grid}
+        return payload, {
+            "mode": "tiled",
+            "tile_count": tile_count,
+            "initial_tile_grid": initial_tile_grid,
+            "tile_grid_sequence": tile_grid_sequence,
+        }
 
     rendered_query = render_query(template, query_context)
     try:
@@ -175,7 +181,12 @@ def fetch_query_payload(
         current_depth=1,
         tile_grid=initial_tile_grid,
     )
-    return payload, {"mode": "tiled", "tile_count": tile_count, "initial_tile_grid": initial_tile_grid}
+    return payload, {
+        "mode": "tiled",
+        "tile_count": tile_count,
+        "initial_tile_grid": initial_tile_grid,
+        "tile_grid_sequence": tile_grid_sequence,
+    }
 
 
 def should_tile_first(settings: dict, query_name: str) -> bool:
@@ -374,6 +385,14 @@ def tile_grid_for_query(settings: dict, query_name: str, current_depth: int) -> 
 
     default_grid = settings.get("tileGridByDepth") or {}
     return normalize_tile_grid(default_grid.get(str(current_depth), [2, 2]))
+
+
+def tile_grid_sequence_for_query(settings: dict, query_name: str, max_depth: int) -> list[list[int]]:
+    sequence: list[list[int]] = []
+    for depth in range(1, max_depth + 1):
+        rows, cols = tile_grid_for_query(settings, query_name, current_depth=depth)
+        sequence.append([rows, cols])
+    return sequence
 
 
 def normalize_tile_grid(value: object) -> tuple[int, int]:

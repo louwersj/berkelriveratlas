@@ -11,18 +11,34 @@
   "requestDelaySeconds": 2.0,
   "maxTileSubdivisionDepth": 2,
   "tileGridByDepth": {
-    "1": [2, 2],
-    "2": [2, 2],
+    "1": [16, 16],
+    "2": [4, 4],
     "3": [2, 2]
   },
   "queryMaxTileSubdivisionDepth": {
     "05-buildings-near-riverbanks": 3
   },
   "queryTileGrids": {
+    "02-roads-paths": [
+      [16, 16],
+      [4, 4]
+    ],
+    "03-bridges-waterworks": [
+      [16, 16],
+      [4, 4]
+    ],
+    "04-places-heritage": [
+      [16, 16],
+      [4, 4]
+    ],
     "05-buildings-near-riverbanks": [
+      [16, 16],
       [4, 4],
-      [3, 3],
       [2, 2]
+    ],
+    "06-settlements": [
+      [16, 16],
+      [4, 4]
     ]
   },
   "maxRequestRetries": 3,
@@ -36,5 +52,5 @@
     "05-buildings-near-riverbanks"
   ],
   "userAgent": "BerkelRiverAtlas/0.1 (+https://github.com/louwersj/berkelriveratlas)",
-  "notes": "Buildings are included when they fall within the configured distance of the waterway centerline. This acts as a practical proxy for both river banks."
+  "notes": "Buildings are included when they fall within the configured distance of the waterway centerline. This acts as a practical proxy for both river banks. Heavy tiled Overpass queries now start on the same explicit 16x16 first-pass grid model used by generated spatial storage."
 }

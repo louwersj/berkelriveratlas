@@ -4,6 +4,7 @@ Use `./pipeline/atlas.sh` as the main entry point.
 
 - `validate` checks content, layers, media references, and secret patterns.
 - `refresh-osm` runs the stored Overpass queries, saves raw OSM JSON, converts it to GeoJSON, and updates derived map layers.
+- Heavy `refresh-osm` queries use the same explicit `16x16` first-pass tile model as generated spatial layer storage.
 - `build-layers` regenerates OSM-derived GeoJSON layer bundles from previously downloaded normalized data and syncs them into `app/data/geo`.
 - Large generated map layers also emit spatial tile sets for bbox-driven loading in the runtime.
 - `build-indexes` copies runtime Markdown content and builds `map.objects.geojson`.

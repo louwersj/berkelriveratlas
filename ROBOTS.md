@@ -72,6 +72,7 @@ As of `2026-07-13`:
 - The OSM pipeline is implemented for live Overpass refresh, but it depends on network access when `refresh-osm` is used.
 - Large OSM-derived runtime layers now use manifest-driven chunk bundles with a hard validation size cap so tracked files stay Git-safe.
 - Large spatial runtime layers can also use tile manifests and tracked `_tiles/` files for bbox-driven loading.
+- Heavy Overpass fetches now follow the same explicit `16x16` first-pass grid model as generated spatial storage.
 
 ## Update Rules
 

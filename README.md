@@ -26,6 +26,7 @@ The built static application lives in `app/`. A packaged deployable copy is crea
 
 - Live Overpass refresh outputs under `data-source/osm/raw/` and `data-source/osm/normalized/` are local build caches and are not tracked in Git.
 - OSM-derived public map layers are generated as small GeoJSON chunks and spatial tiles plus manifest files instead of giant monolithic files.
+- Heavy Overpass refresh queries use the same explicit `16x16` first-pass tiling model, so fetching and generated storage follow one spatial grid strategy.
 - `pipeline/validate_layers.py` enforces a strict tracked-asset size budget so oversized generated files fail validation before commit or release work.
 - Release packages under `releases/` are local build artifacts and are not tracked in Git.
 
