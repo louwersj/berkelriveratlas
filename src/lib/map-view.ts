@@ -1,5 +1,12 @@
 import L from "leaflet";
-import type { GeoFeatureProperties, LanguageCode, LayerDefinition, LayersConfig, MapObjectsIndex } from "./types";
+import type {
+  GeoFeatureProperties,
+  GeoJsonBundleManifest,
+  LanguageCode,
+  LayerDefinition,
+  LayersConfig,
+  MapObjectsIndex,
+} from "./types";
 import { pickLanguageValue } from "./i18n";
 import { resolveRuntimePath } from "./runtime-path";
 
@@ -33,12 +40,8 @@ export class AtlasMap {
     }
 
     let instance: LayerInstance = null;
-    if (layer.type === "geojson" && layer.url) {
-      const response = await fetch(resolveRuntimePath(layer.url));
-      if (!response.ok) {
-        throw new Error(`Failed to load layer ${layer.id}`);
-      }
-      const data = (await response.json()) as GeoJSON.FeatureCollection;
+    if (layer.type === "geojson" && (layer.url || layer.manifestUrl)) {
+      const data = await loadGeoJsonLayer(layer);
       instance = L.geoJSON(data, {
         style: () => ({
           color: layer.style?.stroke ?? "#30302D",
@@ -129,4 +132,33 @@ export class AtlasMap {
   invalidateSize(): void {
     this.map.invalidateSize();
   }
+}
+
+async function loadGeoJsonLayer(layer: LayerDefinition): Promise<GeoJSON.FeatureCollection> {
+  if (layer.manifestUrl) {
+    const manifestResponse = await fetch(resolveRuntimePath(layer.manifestUrl));
+    if (!manifestResponse.ok) {
+      throw new Error(`Failed to load layer manifest ${layer.id}`);
+    }
+    const manifest = (await manifestResponse.json()) as GeoJsonBundleManifest;
+    const chunkPayloads = await Promise.all(
+      manifest.chunks.map(async (chunk) => {
+        const chunkResponse = await fetch(resolveRuntimePath(chunk.url));
+        if (!chunkResponse.ok) {
+          throw new Error(`Failed to load layer chunk ${layer.id}: ${chunk.url}`);
+        }
+        return (await chunkResponse.json()) as GeoJSON.FeatureCollection;
+      }),
+    );
+    return {
+      type: "FeatureCollection",
+      features: chunkPayloads.flatMap((payload) => payload.features ?? []),
+    };
+  }
+
+  const response = await fetch(resolveRuntimePath(layer.url!));
+  if (!response.ok) {
+    throw new Error(`Failed to load layer ${layer.id}`);
+  }
+  return (await response.json()) as GeoJSON.FeatureCollection;
 }

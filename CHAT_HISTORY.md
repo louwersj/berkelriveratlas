@@ -116,3 +116,27 @@ Implement the missing live OpenStreetMap/Overpass refresh behavior and make the 
 - `build-layers` now completes successfully on the real downloaded raw OSM files.
 - A direct Python `TimeoutError` from slow HTTPS reads is now converted into a retryable `OverpassFetchError` so stalled Overpass responses do not bypass the retry/failover logic.
 - OSM refresh now emits explicit per-query `FETCHED`, `FAILED`, or `SKIPPED` terminal messages and writes `data-source/osm/raw/refresh-status.json` so query failures cannot be silent.
+
+## 2026-07-13 Geo Layer Size Hardening
+
+### Session Summary
+
+Redesigned OSM-derived map packaging so tracked files stay small and oversized GeoJSON blobs cannot reappear silently.
+
+### User Request
+
+Identify which files are too large, switch to a smaller-file architecture, and make sure Git tracking remains reliable without recurring oversized-file problems.
+
+### Work Completed
+
+- Identified the worst tracked offenders as `base-roads` at about `94 MB` and `base-paths` at about `77 MB`, mirrored in both `data-source/geo/` and `app/data/geo/`.
+- Reworked `pipeline/normalize_osm.py` to emit manifest-driven chunk bundles for large OSM-derived layers, with a strict `5 MB` per-file target.
+- Updated both runtimes to support `manifestUrl` and client-side merging of GeoJSON chunks.
+- Switched the default `base-linework` layer to manifest-based loading.
+- Added validation rules that fail when tracked generated geo assets exceed the size budget.
+- Marked Overpass raw status files and packaged release folders as local-only, non-tracked artifacts.
+
+### Notes
+
+- The new architecture keeps Git as the system of record for small public layer artifacts, while treating raw refresh data and packaged releases as disposable local build outputs.
+- Future OSM-derived layers should use manifests automatically when they would otherwise exceed the per-file size budget.

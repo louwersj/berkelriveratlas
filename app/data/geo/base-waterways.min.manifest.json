@@ -1,0 +1,30 @@
+{
+  "type": "geojson_bundle",
+  "generatedAt": "2026-07-13T12:08:24Z",
+  "layerId": "base-waterways.min",
+  "featureCount": 28619,
+  "chunkCount": 4,
+  "chunkSizeLimitBytes": 4750000,
+  "chunks": [
+    {
+      "url": "data/geo/_bundles/base-waterways.min/base-waterways.min-001.geojson",
+      "featureCount": 8391,
+      "bytes": 4749679
+    },
+    {
+      "url": "data/geo/_bundles/base-waterways.min/base-waterways.min-002.geojson",
+      "featureCount": 9445,
+      "bytes": 4749955
+    },
+    {
+      "url": "data/geo/_bundles/base-waterways.min/base-waterways.min-003.geojson",
+      "featureCount": 9775,
+      "bytes": 4749864
+    },
+    {
+      "url": "data/geo/_bundles/base-waterways.min/base-waterways.min-004.geojson",
+      "featureCount": 1008,
+      "bytes": 438122
+    }
+  ]
+}

@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
-  <rect width="600" height="400" fill="#efe4c6"/>
-  <path d="M60 280 C140 180 240 170 330 225 S470 270 540 190" fill="none" stroke="#c9821e" stroke-width="10" stroke-dasharray="12 9"/>
-  <text x="55" y="85" fill="#30302d" font-size="26" font-family="Georgia, serif">1843 map sample</text>
-</svg>
-

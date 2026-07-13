@@ -18,7 +18,10 @@ credentials/
 .DS_Store
 *.log
 tempCodeRunnerFile.py
+releases/*
+!releases/.gitkeep
 data-source/osm/raw/[0-9][0-9]-*.json
+data-source/osm/raw/refresh-status.json
 data-source/osm/raw/rendered-queries/*.overpassql
 data-source/osm/normalized/[0-9][0-9]-*.geojson
 data-source/osm/normalized/all-features.geojson

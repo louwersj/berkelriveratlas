@@ -70,6 +70,7 @@ export interface LayerDefinition {
   enabledByDefault?: boolean;
   label: LanguageMap;
   url?: string;
+  manifestUrl?: string;
   attribution?: string;
   opacity?: number;
   provider?: string;
@@ -93,6 +94,22 @@ export interface LayerDefinition {
     to: string;
     mode?: string;
   };
+}
+
+export interface GeoJsonChunkDescriptor {
+  url: string;
+  featureCount: number;
+  bytes: number;
+}
+
+export interface GeoJsonBundleManifest {
+  type: "geojson_bundle";
+  generatedAt: string;
+  layerId: string;
+  featureCount: number;
+  chunkCount: number;
+  chunkSizeLimitBytes: number;
+  chunks: GeoJsonChunkDescriptor[];
 }
 
 export interface LayersConfig {
@@ -208,4 +225,3 @@ export interface RouteState {
   view: "explore" | "object" | "page" | "graph" | "sources";
   id?: string;
 }
-

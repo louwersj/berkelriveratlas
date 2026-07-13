@@ -6,6 +6,7 @@ Overpass is a local build-time concern only.
 - Browser runtime must never query Overpass directly.
 - Raw and normalized refresh outputs live under `data-source/osm/raw/` and `data-source/osm/normalized/`.
 - OSM-derived public layers should preserve attribution to OpenStreetMap contributors.
+- Raw and normalized refresh outputs are local-only caches and should not be committed.
 
 The default public runtime still stays self-contained, but the local refresh pipeline can now perform a live Overpass download when you explicitly run it.
 
@@ -23,8 +24,18 @@ This will:
 2. POST them to the configured Overpass interpreter endpoint
 3. save raw JSON under `data-source/osm/raw/`
 4. convert raw OSM data to GeoJSON under `data-source/osm/normalized/`
-5. regenerate derived project GeoJSON layers under `data-source/geo/`
-6. sync the generated layers into `app/data/geo/`
+5. regenerate derived project layer manifests and GeoJSON chunks under `data-source/geo/`
+6. sync the generated runtime layer bundles into `app/data/geo/`
+
+## Output Shape
+
+Generated OSM-derived layers now follow a Git-safe bundle layout:
+
+- small `.geojson` files for small layers
+- `.manifest.json` files for large layers
+- chunk files under `data-source/geo/_bundles/` and `app/data/geo/_bundles/`
+
+The browser runtime reads the manifest, fetches the listed chunks, and merges them client-side.
 
 ## Buildings Near Riverbanks
 

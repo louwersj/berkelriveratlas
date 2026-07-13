@@ -188,11 +188,23 @@ async function ensureDefaultLayersLoaded() {
 }
 
 async function ensureLayerData(layer) {
-  if (!layer.url || state.layerCache.has(layer.id) || layer.type !== "geojson") {
+  if (state.layerCache.has(layer.id) || layer.type !== "geojson" || (!layer.url && !layer.manifestUrl)) {
     return;
   }
-  const geojson = await fetchJson(layer.url);
+  const geojson = await loadGeoJsonLayer(layer);
   state.layerCache.set(layer.id, geojson);
+}
+
+async function loadGeoJsonLayer(layer) {
+  if (layer.manifestUrl) {
+    const manifest = await fetchJson(layer.manifestUrl);
+    const chunks = await Promise.all(manifest.chunks.map((chunk) => fetchJson(chunk.url)));
+    return {
+      type: "FeatureCollection",
+      features: chunks.flatMap((chunk) => chunk.features || [])
+    };
+  }
+  return fetchJson(layer.url);
 }
 
 function bindEvents() {

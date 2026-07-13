@@ -1,0 +1,115 @@
+{
+  "type": "geojson_bundle",
+  "generatedAt": "2026-07-13T12:08:24Z",
+  "layerId": "base-roads.min",
+  "featureCount": 188368,
+  "chunkCount": 21,
+  "chunkSizeLimitBytes": 4750000,
+  "chunks": [
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-001.geojson",
+      "featureCount": 8582,
+      "bytes": 4749569
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-002.geojson",
+      "featureCount": 8748,
+      "bytes": 4749395
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-003.geojson",
+      "featureCount": 8214,
+      "bytes": 4749874
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-004.geojson",
+      "featureCount": 8578,
+      "bytes": 4749729
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-005.geojson",
+      "featureCount": 8161,
+      "bytes": 4749633
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-006.geojson",
+      "featureCount": 8519,
+      "bytes": 4748341
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-007.geojson",
+      "featureCount": 8392,
+      "bytes": 4749495
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-008.geojson",
+      "featureCount": 8571,
+      "bytes": 4749652
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-009.geojson",
+      "featureCount": 8765,
+      "bytes": 4749628
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-010.geojson",
+      "featureCount": 8945,
+      "bytes": 4749828
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-011.geojson",
+      "featureCount": 9091,
+      "bytes": 4749852
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-012.geojson",
+      "featureCount": 9208,
+      "bytes": 4750034
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-013.geojson",
+      "featureCount": 9521,
+      "bytes": 4749649
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-014.geojson",
+      "featureCount": 9423,
+      "bytes": 4749882
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-015.geojson",
+      "featureCount": 9556,
+      "bytes": 4749822
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-016.geojson",
+      "featureCount": 9498,
+      "bytes": 4749871
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-017.geojson",
+      "featureCount": 9638,
+      "bytes": 4749940
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-018.geojson",
+      "featureCount": 9627,
+      "bytes": 4749529
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-019.geojson",
+      "featureCount": 9705,
+      "bytes": 4749673
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-020.geojson",
+      "featureCount": 9687,
+      "bytes": 4749699
+    },
+    {
+      "url": "data/geo/_bundles/base-roads.min/base-roads.min-021.geojson",
+      "featureCount": 7939,
+      "bytes": 3740859
+    }
+  ]
+}

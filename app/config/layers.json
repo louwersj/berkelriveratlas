@@ -47,7 +47,7 @@
         "de": "Klare Linienkarte",
         "nl": "Schone lijnkaart"
       },
-      "url": "data/geo/base-linework.min.geojson",
+      "manifestUrl": "data/geo/base-linework.min.manifest.json",
       "style": {
         "stroke": "#30302D",
         "strokeWidth": 1.1,

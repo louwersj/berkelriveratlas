@@ -1,0 +1,95 @@
+{
+  "type": "geojson_bundle",
+  "generatedAt": "2026-07-13T12:08:24Z",
+  "layerId": "base-paths.min",
+  "featureCount": 152371,
+  "chunkCount": 17,
+  "chunkSizeLimitBytes": 4750000,
+  "chunks": [
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-001.geojson",
+      "featureCount": 8500,
+      "bytes": 4749584
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-002.geojson",
+      "featureCount": 8349,
+      "bytes": 4749821
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-003.geojson",
+      "featureCount": 8229,
+      "bytes": 4749796
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-004.geojson",
+      "featureCount": 8365,
+      "bytes": 4749981
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-005.geojson",
+      "featureCount": 8571,
+      "bytes": 4749896
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-006.geojson",
+      "featureCount": 8544,
+      "bytes": 4749279
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-007.geojson",
+      "featureCount": 8472,
+      "bytes": 4749751
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-008.geojson",
+      "featureCount": 8944,
+      "bytes": 4749587
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-009.geojson",
+      "featureCount": 8900,
+      "bytes": 4749810
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-010.geojson",
+      "featureCount": 8770,
+      "bytes": 4749360
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-011.geojson",
+      "featureCount": 9164,
+      "bytes": 4748800
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-012.geojson",
+      "featureCount": 9317,
+      "bytes": 4749333
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-013.geojson",
+      "featureCount": 9543,
+      "bytes": 4749262
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-014.geojson",
+      "featureCount": 9446,
+      "bytes": 4749514
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-015.geojson",
+      "featureCount": 9464,
+      "bytes": 4749741
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-016.geojson",
+      "featureCount": 9780,
+      "bytes": 4749522
+    },
+    {
+      "url": "data/geo/_bundles/base-paths.min/base-paths.min-017.geojson",
+      "featureCount": 10013,
+      "bytes": 4612122
+    }
+  ]
+}

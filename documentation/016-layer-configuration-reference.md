@@ -9,6 +9,7 @@ Common fields in `layers.json`:
 - `enabledByDefault`: initial state
 - `label`: multilingual label map
 - `url`: local or external layer source
+- `manifestUrl`: manifest-driven local GeoJSON bundle source for large layers
 - `style`: simple line and fill styling for GeoJSON
 - `opacity`: default opacity
 - `time`: optional time coverage

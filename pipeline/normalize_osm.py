@@ -7,6 +7,22 @@ from typing import Any
 
 from common import APP_DIR, DATA_SOURCE_DIR, ensure_directory, now_iso, read_text, write_json
 
+CHUNK_SIZE_LIMIT_BYTES = 4_750_000
+GENERATED_LAYER_BASENAMES = (
+    "base-linework.min",
+    "base-paths.min",
+    "base-roads.min",
+    "base-waterways.min",
+    "bridges.min",
+    "waterworks.min",
+    "heritage.min",
+    "settlements.min",
+    "landuse.min",
+    "boundaries.min",
+    "buildings-near-riverbanks",
+)
+CHUNK_DIRECTORY_NAME = "_bundles"
+
 
 def main() -> int:
     normalized_dir = DATA_SOURCE_DIR / "osm/normalized"
@@ -17,14 +33,14 @@ def main() -> int:
 
     features = load_normalized_features(normalized_dir)
     if not features:
-        sync_geo_directory(geo_dir, app_geo_dir)
         print("No normalized OSM features found; preserved existing GeoJSON layers.")
         return 0
 
+    clear_generated_outputs(geo_dir)
+    clear_generated_outputs(app_geo_dir)
     layers = build_layers(features)
 
-    for filename, payload in layers.items():
-        write_json(geo_dir / filename, payload, indent=None)
+    write_layers(geo_dir, layers)
     sync_geo_directory(geo_dir, app_geo_dir)
 
     print(f"Built {len(layers)} OSM-derived GeoJSON layers.")
@@ -115,6 +131,107 @@ def collection() -> dict[str, Any]:
 def sync_geo_directory(source_dir: Path, target_dir: Path) -> None:
     for item in source_dir.glob("*.geojson"):
         shutil.copy2(item, target_dir / item.name)
+    for item in source_dir.glob("*.json"):
+        shutil.copy2(item, target_dir / item.name)
+    bundle_dir = source_dir / CHUNK_DIRECTORY_NAME
+    target_bundle_dir = target_dir / CHUNK_DIRECTORY_NAME
+    if bundle_dir.exists():
+        shutil.copytree(bundle_dir, target_bundle_dir, dirs_exist_ok=True)
+
+
+def write_layers(target_dir: Path, layers: dict[str, dict[str, Any]]) -> None:
+    bundle_dir = target_dir / CHUNK_DIRECTORY_NAME
+    ensure_directory(bundle_dir)
+    for filename, payload in layers.items():
+        write_layer(target_dir, bundle_dir, filename, payload)
+
+
+def write_layer(target_dir: Path, bundle_dir: Path, filename: str, payload: dict[str, Any]) -> None:
+    chunks = chunk_features(payload["features"])
+    if len(chunks) <= 1:
+        write_json(target_dir / filename, payload, indent=None)
+        return
+
+    layer_id = filename.removesuffix(".geojson")
+    layer_bundle_dir = bundle_dir / layer_id
+    ensure_directory(layer_bundle_dir)
+    manifest_chunks: list[dict[str, Any]] = []
+
+    for index, chunk_features_payload in enumerate(chunks, start=1):
+        chunk_filename = f"{layer_id}-{index:03d}.geojson"
+        chunk_relative_url = f"data/geo/{CHUNK_DIRECTORY_NAME}/{layer_id}/{chunk_filename}"
+        chunk_collection = {
+            "type": "FeatureCollection",
+            "generated_at": payload.get("generated_at"),
+            "features": chunk_features_payload,
+        }
+        write_json(layer_bundle_dir / chunk_filename, chunk_collection, indent=None)
+        manifest_chunks.append(
+            {
+                "url": chunk_relative_url,
+                "featureCount": len(chunk_features_payload),
+                "bytes": json_size_bytes(chunk_collection),
+            }
+        )
+
+    manifest = {
+        "type": "geojson_bundle",
+        "generatedAt": payload.get("generated_at"),
+        "layerId": layer_id,
+        "featureCount": len(payload["features"]),
+        "chunkCount": len(manifest_chunks),
+        "chunkSizeLimitBytes": CHUNK_SIZE_LIMIT_BYTES,
+        "chunks": manifest_chunks,
+    }
+    write_json(target_dir / f"{layer_id}.manifest.json", manifest)
+
+
+def clear_generated_outputs(directory: Path) -> None:
+    bundle_dir = directory / CHUNK_DIRECTORY_NAME
+    if bundle_dir.exists():
+        shutil.rmtree(bundle_dir)
+
+    for basename in GENERATED_LAYER_BASENAMES:
+        for suffix in (".geojson", ".manifest.json"):
+            path = directory / f"{basename}{suffix}"
+            if path.exists():
+                path.unlink()
+
+
+def chunk_features(features: list[dict[str, Any]]) -> list[list[dict[str, Any]]]:
+    chunks: list[list[dict[str, Any]]] = []
+    current_chunk: list[dict[str, Any]] = []
+    current_size = collection_overhead_bytes()
+
+    for feature in features:
+        feature_size = feature_size_bytes(feature)
+        feature_entry_size = feature_size + (1 if current_chunk else 0)
+
+        if current_chunk and current_size + feature_entry_size > CHUNK_SIZE_LIMIT_BYTES:
+            chunks.append(current_chunk)
+            current_chunk = [feature]
+            current_size = collection_overhead_bytes() + feature_size
+            continue
+
+        current_chunk.append(feature)
+        current_size += feature_entry_size
+
+    if current_chunk:
+        chunks.append(current_chunk)
+
+    return chunks
+
+
+def collection_overhead_bytes() -> int:
+    return len('{"type":"FeatureCollection","features":[]}\n'.encode("utf-8"))
+
+
+def feature_size_bytes(feature: dict[str, Any]) -> int:
+    return len(json.dumps(feature, ensure_ascii=False, separators=(",", ":")).encode("utf-8"))
+
+
+def json_size_bytes(payload: dict[str, Any]) -> int:
+    return len(json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")) + 1
 
 
 def normalize_properties(feature: dict[str, Any]) -> dict[str, Any]:

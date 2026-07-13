@@ -70,6 +70,7 @@ As of `2026-07-13`:
 - Validation and release pipeline pass in the current environment.
 - Vite source code exists but was not build-verified on this workstation because Node was unavailable.
 - The OSM pipeline is implemented for live Overpass refresh, but it depends on network access when `refresh-osm` is used.
+- Large OSM-derived runtime layers now use manifest-driven chunk bundles with a hard validation size cap so tracked files stay Git-safe.
 
 ## Update Rules
 
@@ -78,10 +79,12 @@ Whenever significant work is done:
 - update `CHAT_HISTORY.md`
 - update `ROBOTS.md` if recovery instructions or project state materially change
 - update documentation if architecture, pipeline, or content conventions change
+- keep generated tracked geo assets under the validation size budget; if a layer grows, split it through the manifest bundle path rather than committing a larger single file
 
 ## What Not To Do
 
 - Do not commit secrets.
+- Do not commit raw Overpass cache files or packaged release folders.
 - Do not replace the static architecture with a server-backed runtime.
 - Do not assume external map providers are available by default.
 - Do not delete the history or recovery files.
