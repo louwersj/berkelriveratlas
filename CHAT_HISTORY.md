@@ -183,3 +183,4 @@ Move beyond whole-layer GeoJSON storage and implement a structure that stores an
 ### Notes
 
 - The current large-layer tile grid is `16x16`, which keeps tracked tile files under the repo size cap while remaining small enough for bbox-based access.
+- Tile manifests are now explicit for all `256` cells in the `16x16` grid, including empty tiles, so the layout is fully predictable for downstream tooling and runtime logic.

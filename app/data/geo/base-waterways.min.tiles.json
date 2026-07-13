@@ -1,6 +1,6 @@
 {
   "type": "geojson_tile_set",
-  "generatedAt": "2026-07-13T14:28:36Z",
+  "generatedAt": "2026-07-13T14:48:15Z",
   "layerId": "base-waterways.min",
   "featureCount": 28619,
   "tileGrid": [
@@ -1359,6 +1359,20 @@
       "bytes": 13933
     },
     {
+      "id": "r07-c01",
+      "row": 7,
+      "col": 1,
+      "bbox": [
+        52.021577525,
+        5.8743384,
+        52.0612856625,
+        5.9599998562500005
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r07-c01.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
       "id": "r07-c02",
       "row": 7,
       "col": 2,
@@ -1569,6 +1583,20 @@
       "bytes": 27726
     },
     {
+      "id": "r08-c01",
+      "row": 8,
+      "col": 1,
+      "bbox": [
+        52.0612856625,
+        5.8743384,
+        52.1009938,
+        5.9599998562500005
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r08-c01.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
       "id": "r08-c02",
       "row": 8,
       "col": 2,
@@ -1777,6 +1805,20 @@
       "url": "data/geo/_tiles/base-waterways.min/r08-c16.geojson",
       "featureCount": 35,
       "bytes": 18915
+    },
+    {
+      "id": "r09-c01",
+      "row": 9,
+      "col": 1,
+      "bbox": [
+        52.1009938,
+        5.8743384,
+        52.1407019375,
+        5.9599998562500005
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r09-c01.geojson",
+      "featureCount": 0,
+      "bytes": 81
     },
     {
       "id": "r09-c02",
@@ -2885,6 +2927,20 @@
       "bytes": 23251
     },
     {
+      "id": "r14-c01",
+      "row": 14,
+      "col": 1,
+      "bbox": [
+        52.2995344875,
+        5.8743384,
+        52.339242625,
+        5.9599998562500005
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r14-c01.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
       "id": "r14-c02",
       "row": 14,
       "col": 2,
@@ -3123,6 +3179,20 @@
       "bytes": 5493
     },
     {
+      "id": "r15-c03",
+      "row": 15,
+      "col": 3,
+      "bbox": [
+        52.339242625,
+        6.0456613125,
+        52.3789507625,
+        6.13132276875
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r15-c03.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
       "id": "r15-c04",
       "row": 15,
       "col": 4,
@@ -3305,6 +3375,174 @@
       "bytes": 33729
     },
     {
+      "id": "r16-c01",
+      "row": 16,
+      "col": 1,
+      "bbox": [
+        52.3789507625,
+        5.8743384,
+        52.4186589,
+        5.9599998562500005
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r16-c01.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c02",
+      "row": 16,
+      "col": 2,
+      "bbox": [
+        52.3789507625,
+        5.9599998562500005,
+        52.4186589,
+        6.0456613125
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r16-c02.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c03",
+      "row": 16,
+      "col": 3,
+      "bbox": [
+        52.3789507625,
+        6.0456613125,
+        52.4186589,
+        6.13132276875
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r16-c03.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c04",
+      "row": 16,
+      "col": 4,
+      "bbox": [
+        52.3789507625,
+        6.13132276875,
+        52.4186589,
+        6.216984225
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r16-c04.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c05",
+      "row": 16,
+      "col": 5,
+      "bbox": [
+        52.3789507625,
+        6.216984225,
+        52.4186589,
+        6.3026456812500005
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r16-c05.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c06",
+      "row": 16,
+      "col": 6,
+      "bbox": [
+        52.3789507625,
+        6.3026456812500005,
+        52.4186589,
+        6.3883071375
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r16-c06.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c07",
+      "row": 16,
+      "col": 7,
+      "bbox": [
+        52.3789507625,
+        6.3883071375,
+        52.4186589,
+        6.47396859375
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r16-c07.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c08",
+      "row": 16,
+      "col": 8,
+      "bbox": [
+        52.3789507625,
+        6.47396859375,
+        52.4186589,
+        6.55963005
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r16-c08.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c09",
+      "row": 16,
+      "col": 9,
+      "bbox": [
+        52.3789507625,
+        6.55963005,
+        52.4186589,
+        6.64529150625
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r16-c09.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c10",
+      "row": 16,
+      "col": 10,
+      "bbox": [
+        52.3789507625,
+        6.64529150625,
+        52.4186589,
+        6.7309529625
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r16-c10.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c11",
+      "row": 16,
+      "col": 11,
+      "bbox": [
+        52.3789507625,
+        6.7309529625,
+        52.4186589,
+        6.8166144187499995
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r16-c11.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c12",
+      "row": 16,
+      "col": 12,
+      "bbox": [
+        52.3789507625,
+        6.8166144187499995,
+        52.4186589,
+        6.902275875
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r16-c12.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
       "id": "r16-c13",
       "row": 16,
       "col": 13,
@@ -3331,6 +3569,34 @@
       "url": "data/geo/_tiles/base-waterways.min/r16-c14.geojson",
       "featureCount": 1,
       "bytes": 2280
+    },
+    {
+      "id": "r16-c15",
+      "row": 16,
+      "col": 15,
+      "bbox": [
+        52.3789507625,
+        7.0735987875,
+        52.4186589,
+        7.1592602437499995
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r16-c15.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c16",
+      "row": 16,
+      "col": 16,
+      "bbox": [
+        52.3789507625,
+        7.1592602437499995,
+        52.4186589,
+        7.2449217
+      ],
+      "url": "data/geo/_tiles/base-waterways.min/r16-c16.geojson",
+      "featureCount": 0,
+      "bytes": 81
     }
   ]
 }

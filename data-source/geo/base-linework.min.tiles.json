@@ -1,6 +1,6 @@
 {
   "type": "geojson_tile_set",
-  "generatedAt": "2026-07-13T14:28:36Z",
+  "generatedAt": "2026-07-13T14:48:15Z",
   "layerId": "base-linework.min",
   "featureCount": 369358,
   "tileGrid": [
@@ -3375,6 +3375,174 @@
       "bytes": 102073
     },
     {
+      "id": "r16-c01",
+      "row": 16,
+      "col": 1,
+      "bbox": [
+        52.3785641625,
+        5.856664,
+        52.4186589,
+        5.94343010625
+      ],
+      "url": "data/geo/_tiles/base-linework.min/r16-c01.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c02",
+      "row": 16,
+      "col": 2,
+      "bbox": [
+        52.3785641625,
+        5.94343010625,
+        52.4186589,
+        6.0301962125
+      ],
+      "url": "data/geo/_tiles/base-linework.min/r16-c02.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c03",
+      "row": 16,
+      "col": 3,
+      "bbox": [
+        52.3785641625,
+        6.0301962125,
+        52.4186589,
+        6.116962318750001
+      ],
+      "url": "data/geo/_tiles/base-linework.min/r16-c03.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c04",
+      "row": 16,
+      "col": 4,
+      "bbox": [
+        52.3785641625,
+        6.116962318750001,
+        52.4186589,
+        6.203728425
+      ],
+      "url": "data/geo/_tiles/base-linework.min/r16-c04.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c05",
+      "row": 16,
+      "col": 5,
+      "bbox": [
+        52.3785641625,
+        6.203728425,
+        52.4186589,
+        6.29049453125
+      ],
+      "url": "data/geo/_tiles/base-linework.min/r16-c05.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c06",
+      "row": 16,
+      "col": 6,
+      "bbox": [
+        52.3785641625,
+        6.29049453125,
+        52.4186589,
+        6.3772606375
+      ],
+      "url": "data/geo/_tiles/base-linework.min/r16-c06.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c07",
+      "row": 16,
+      "col": 7,
+      "bbox": [
+        52.3785641625,
+        6.3772606375,
+        52.4186589,
+        6.46402674375
+      ],
+      "url": "data/geo/_tiles/base-linework.min/r16-c07.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c08",
+      "row": 16,
+      "col": 8,
+      "bbox": [
+        52.3785641625,
+        6.46402674375,
+        52.4186589,
+        6.5507928500000006
+      ],
+      "url": "data/geo/_tiles/base-linework.min/r16-c08.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c09",
+      "row": 16,
+      "col": 9,
+      "bbox": [
+        52.3785641625,
+        6.5507928500000006,
+        52.4186589,
+        6.63755895625
+      ],
+      "url": "data/geo/_tiles/base-linework.min/r16-c09.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c10",
+      "row": 16,
+      "col": 10,
+      "bbox": [
+        52.3785641625,
+        6.63755895625,
+        52.4186589,
+        6.7243250625
+      ],
+      "url": "data/geo/_tiles/base-linework.min/r16-c10.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c11",
+      "row": 16,
+      "col": 11,
+      "bbox": [
+        52.3785641625,
+        6.7243250625,
+        52.4186589,
+        6.81109116875
+      ],
+      "url": "data/geo/_tiles/base-linework.min/r16-c11.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c12",
+      "row": 16,
+      "col": 12,
+      "bbox": [
+        52.3785641625,
+        6.81109116875,
+        52.4186589,
+        6.897857275
+      ],
+      "url": "data/geo/_tiles/base-linework.min/r16-c12.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
       "id": "r16-c13",
       "row": 16,
       "col": 13,
@@ -3401,6 +3569,34 @@
       "url": "data/geo/_tiles/base-linework.min/r16-c14.geojson",
       "featureCount": 1,
       "bytes": 2280
+    },
+    {
+      "id": "r16-c15",
+      "row": 16,
+      "col": 15,
+      "bbox": [
+        52.3785641625,
+        7.071389487499999,
+        52.4186589,
+        7.15815559375
+      ],
+      "url": "data/geo/_tiles/base-linework.min/r16-c15.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c16",
+      "row": 16,
+      "col": 16,
+      "bbox": [
+        52.3785641625,
+        7.15815559375,
+        52.4186589,
+        7.2449217
+      ],
+      "url": "data/geo/_tiles/base-linework.min/r16-c16.geojson",
+      "featureCount": 0,
+      "bytes": 81
     }
   ]
 }

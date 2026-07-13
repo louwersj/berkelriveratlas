@@ -237,8 +237,6 @@ def write_tile_manifest(tile_dir: Path, target_dir: Path, layer_id: str, payload
     for row in range(rows):
         for col in range(cols):
             tile_features = buckets.get((row, col), [])
-            if not tile_features:
-                continue
             tile_south = south + (lat_step * row)
             tile_west = west + (lon_step * col)
             tile_north = north if row == rows - 1 else south + (lat_step * (row + 1))

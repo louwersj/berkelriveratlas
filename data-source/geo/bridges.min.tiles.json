@@ -1,6 +1,6 @@
 {
   "type": "geojson_tile_set",
-  "generatedAt": "2026-07-13T14:28:36Z",
+  "generatedAt": "2026-07-13T14:48:15Z",
   "layerId": "bridges.min",
   "featureCount": 14144,
   "tileGrid": [
@@ -1597,6 +1597,20 @@
       "bytes": 961
     },
     {
+      "id": "r08-c02",
+      "row": 8,
+      "col": 2,
+      "bbox": [
+        52.040625675,
+        5.980234118749999,
+        52.0749936,
+        6.061586537499999
+      ],
+      "url": "data/geo/_tiles/bridges.min/r08-c02.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
       "id": "r08-c03",
       "row": 8,
       "col": 3,
@@ -2001,6 +2015,20 @@
       "url": "data/geo/_tiles/bridges.min/r09-c15.geojson",
       "featureCount": 18,
       "bytes": 7751
+    },
+    {
+      "id": "r09-c16",
+      "row": 9,
+      "col": 16,
+      "bbox": [
+        52.0749936,
+        7.11916798125,
+        52.109361525,
+        7.2005204
+      ],
+      "url": "data/geo/_tiles/bridges.min/r09-c16.geojson",
+      "featureCount": 0,
+      "bytes": 81
     },
     {
       "id": "r10-c01",
@@ -3415,6 +3443,34 @@
       "url": "data/geo/_tiles/bridges.min/r16-c05.geojson",
       "featureCount": 18,
       "bytes": 7687
+    },
+    {
+      "id": "r16-c06",
+      "row": 16,
+      "col": 6,
+      "bbox": [
+        52.315569075,
+        6.30564379375,
+        52.349937,
+        6.3869962125
+      ],
+      "url": "data/geo/_tiles/bridges.min/r16-c06.geojson",
+      "featureCount": 0,
+      "bytes": 81
+    },
+    {
+      "id": "r16-c07",
+      "row": 16,
+      "col": 7,
+      "bbox": [
+        52.315569075,
+        6.3869962125,
+        52.349937,
+        6.46834863125
+      ],
+      "url": "data/geo/_tiles/bridges.min/r16-c07.geojson",
+      "featureCount": 0,
+      "bytes": 81
     },
     {
       "id": "r16-c08",
