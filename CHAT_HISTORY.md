@@ -156,5 +156,6 @@ Investigate why refresh appeared stuck at `04-places-heritage` and address the k
 - Confirmed the refresh was actually moving on to `05-buildings-near-riverbanks`, which is substantially heavier than `04-places-heritage`.
 - Added `STARTING` output before each query begins.
 - Added per-tile progress logging during tiled fetches, including subdivision retries and tile-level failures.
+- Added stable nested tile path labels so every individual sub-tile fetch is visible in the terminal output.
 - Added explicit interrupt handling so `refresh-status.json` records an `interrupted` run instead of only showing a traceback.
 - Added a deeper tile subdivision override for `05-buildings-near-riverbanks` to improve its chance of finishing.

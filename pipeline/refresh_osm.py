@@ -233,6 +233,7 @@ def fetch_tiled_payload(
     query_name: str,
     max_depth: int,
     current_depth: int,
+    tile_path: tuple[int, ...] = (),
 ) -> tuple[dict, int]:
     merged_elements: dict[tuple[str, int], dict] = {}
     osm3s = None
@@ -241,26 +242,28 @@ def fetch_tiled_payload(
 
     for tile_index, tile_context in enumerate(split_bbox_context(context), start=1):
         tile_query = render_query(template, tile_context)
+        current_tile_path = (*tile_path, tile_index)
+        tile_path_label = ".".join(str(part) for part in current_tile_path)
         print(
             "TILE: "
-            f"{query_name} depth={current_depth}/{max_depth} tile={tile_index}/4 "
+            f"{query_name} depth={current_depth}/{max_depth} path={tile_path_label} tile={tile_index}/4 "
             f"bbox={tile_context['bbox_south']},{tile_context['bbox_west']},{tile_context['bbox_north']},{tile_context['bbox_east']}"
         )
         try:
             payload = fetch_overpass(settings, tile_query)
             tile_count += 1
             print(
-                f"TILE FETCHED: {query_name} depth={current_depth}/{max_depth} tile={tile_index}/4 "
+                f"TILE FETCHED: {query_name} depth={current_depth}/{max_depth} path={tile_path_label} tile={tile_index}/4 "
                 f"({len(payload.get('elements', []))} elements)"
             )
         except OverpassFetchError as error:
             if not error.retryable or current_depth >= max_depth:
                 print(
-                    f"TILE FAILED: {query_name} depth={current_depth}/{max_depth} tile={tile_index}/4 -> {error}"
+                    f"TILE FAILED: {query_name} depth={current_depth}/{max_depth} path={tile_path_label} tile={tile_index}/4 -> {error}"
                 )
                 raise
             print(
-                f"TILE RETRYING VIA SUBDIVISION: {query_name} depth={current_depth}/{max_depth} tile={tile_index}/4 -> {error}"
+                f"TILE RETRYING VIA SUBDIVISION: {query_name} depth={current_depth}/{max_depth} path={tile_path_label} tile={tile_index}/4 -> {error}"
             )
             payload, nested_tile_count = fetch_tiled_payload(
                 settings,
@@ -269,6 +272,7 @@ def fetch_tiled_payload(
                 query_name=query_name,
                 max_depth=max_depth,
                 current_depth=current_depth + 1,
+                tile_path=current_tile_path,
             )
             tile_count += nested_tile_count
 
