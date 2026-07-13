@@ -1,0 +1,62 @@
+[
+  {
+    "id": "image-borculo-mill-001",
+    "title": "Illustratieve historische molenafbeelding",
+    "summary": "Een voorbeeld-mediakaart met beeldmetadata, rechten en ruimtelijke relevantie.",
+    "content_path": "content/media/image-borculo-mill-001.md"
+  },
+  {
+    "id": "map-berkel-1843-001",
+    "title": "Illustratieve historische kaart van de Berkel bij Borculo, 1843",
+    "summary": "Een voorbeeldkaart in negentiende-eeuwse stijl om historische overlays te demonstreren.",
+    "content_path": "content/media/map-berkel-1843-001.md"
+  },
+  {
+    "id": "bridge-borculo-001",
+    "title": "Brug bij de voorbeeldbocht",
+    "summary": "Illustratief oversteekpunt om hedendaagse rivierrelaties in de atlas te tonen.",
+    "content_path": "content/objects/bridge-borculo-001.md"
+  },
+  {
+    "id": "river-segment-borculo-001",
+    "title": "Voorbeeld riviersegment bij Borculo",
+    "summary": "Illustratief segment dat als relatiedoel in de voorbeelddata van de atlas dient.",
+    "content_path": "content/objects/river-segment-borculo-001.md"
+  },
+  {
+    "id": "watermill-borculo-001",
+    "title": "Voormalige watermolen bij Borculo",
+    "summary": "Illustratief voorbeeldobject van een historische molenlocatie aan de Berkel.",
+    "content_path": "content/objects/watermill-borculo-001.md"
+  },
+  {
+    "id": "page-about",
+    "title": "Over De Berkel Rivieratlas",
+    "summary": "",
+    "content_path": "content/pages/about.md"
+  },
+  {
+    "id": "page-contact",
+    "title": "Contact",
+    "summary": "",
+    "content_path": "content/pages/contact.md"
+  },
+  {
+    "id": "page-contribute",
+    "title": "Bijdragen",
+    "summary": "",
+    "content_path": "content/pages/contribute.md"
+  },
+  {
+    "id": "page-methodology",
+    "title": "Methodologie",
+    "summary": "",
+    "content_path": "content/pages/methodology.md"
+  },
+  {
+    "id": "story-water-and-work-001",
+    "title": "Water en werk langs de Berkel",
+    "summary": "Een voorbeeldverhaal dat molens, overgangen en historisch beeldmateriaal langs de rivier verbindt.",
+    "content_path": "content/stories/story-water-and-work-001.md"
+  }
+]

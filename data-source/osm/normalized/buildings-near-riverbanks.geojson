@@ -1,0 +1,7 @@
+{
+  "type": "FeatureCollection",
+  "properties": {
+    "riverbank_distance_m": 75
+  },
+  "features": []
+}

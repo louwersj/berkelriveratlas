@@ -1,0 +1,24 @@
+{
+  "name": "berkelriveratlas",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "validate": "bash pipeline/atlas.sh validate",
+    "release": "bash pipeline/atlas.sh release"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "leaflet": "^1.9.4",
+    "marked": "^15.0.12"
+  },
+  "devDependencies": {
+    "@types/geojson": "^7946.0.16",
+    "@types/leaflet": "^1.9.20",
+    "typescript": "^5.8.3",
+    "vite": "^7.0.0"
+  }
+}

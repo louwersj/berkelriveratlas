@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-07-13T10:39:36Z",
+  "note": "Placeholder for building features found within the configured riverbank distance.",
+  "settings": {
+    "berkelRegionBbox": [
+      51.8,
+      5.9,
+      52.35,
+      7.2
+    ],
+    "riverbankBuildingDistanceM": 75,
+    "notes": "Buildings are included when they fall within the configured distance of the waterway centerline. This acts as a practical proxy for both river banks."
+  },
+  "elements": []
+}

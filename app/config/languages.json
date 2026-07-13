@@ -1,0 +1,9 @@
+{
+  "supported": ["en", "de", "nl"],
+  "labels": {
+    "en": "English",
+    "de": "Deutsch",
+    "nl": "Nederlands"
+  }
+}
+

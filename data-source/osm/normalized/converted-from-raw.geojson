@@ -1,0 +1,5 @@
+{
+  "type": "FeatureCollection",
+  "features": [],
+  "note": "Placeholder conversion output. Replace with real raw-to-GeoJSON conversion logic when integrating live OSM refreshes."
+}

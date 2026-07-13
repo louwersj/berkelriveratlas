@@ -1,0 +1,241 @@
+{
+  "version": "1.0",
+  "defaultBaseLayer": "base-linework",
+  "groups": [
+    {
+      "id": "base",
+      "label": {
+        "en": "Base maps",
+        "de": "Basiskarten",
+        "nl": "Basiskaarten"
+      }
+    },
+    {
+      "id": "river",
+      "label": {
+        "en": "River layers",
+        "de": "Flussebenen",
+        "nl": "Rivierlagen"
+      }
+    },
+    {
+      "id": "historic",
+      "label": {
+        "en": "Historic maps",
+        "de": "Historische Karten",
+        "nl": "Historische kaarten"
+      }
+    },
+    {
+      "id": "external",
+      "label": {
+        "en": "External layers",
+        "de": "Externe Ebenen",
+        "nl": "Externe lagen"
+      }
+    }
+  ],
+  "layers": [
+    {
+      "id": "base-linework",
+      "group": "base",
+      "type": "geojson",
+      "role": "base",
+      "enabledByDefault": true,
+      "label": {
+        "en": "Clean linework base",
+        "de": "Klare Linienkarte",
+        "nl": "Schone lijnkaart"
+      },
+      "url": "data/geo/base-linework.min.geojson",
+      "style": {
+        "stroke": "#30302D",
+        "strokeWidth": 1.1,
+        "strokeOpacity": 0.48
+      },
+      "attribution": "© OpenStreetMap contributors"
+    },
+    {
+      "id": "buildings-near-riverbanks",
+      "group": "base",
+      "type": "geojson",
+      "role": "overlay",
+      "enabledByDefault": false,
+      "label": {
+        "en": "Buildings near riverbanks",
+        "de": "Gebäude nahe den Ufern",
+        "nl": "Gebouwen nabij de oevers"
+      },
+      "url": "data/geo/buildings-near-riverbanks.geojson",
+      "style": {
+        "stroke": "#66665F",
+        "strokeWidth": 1,
+        "strokeOpacity": 0.55,
+        "fill": "#E8E4DA",
+        "fillOpacity": 0.55
+      },
+      "attribution": "© OpenStreetMap contributors",
+      "documentation": "documentation/005-osm-overpass-refresh.md#buildings-near-riverbanks"
+    },
+    {
+      "id": "river-current",
+      "group": "river",
+      "type": "geojson",
+      "role": "overlay",
+      "enabledByDefault": true,
+      "label": {
+        "en": "Current Berkel",
+        "de": "Heutige Berkel",
+        "nl": "Huidige Berkel"
+      },
+      "url": "data/geo/river-current.geojson",
+      "style": {
+        "stroke": "#2E6F9E",
+        "strokeWidth": 3,
+        "strokeOpacity": 1
+      },
+      "attribution": "Illustrative sample line"
+    },
+    {
+      "id": "river-current-corridor",
+      "group": "river",
+      "type": "geojson",
+      "role": "overlay",
+      "enabledByDefault": true,
+      "label": {
+        "en": "Current corridor",
+        "de": "Heutiger Korridor",
+        "nl": "Huidige corridor"
+      },
+      "url": "data/geo/river-current-corridor.geojson",
+      "style": {
+        "stroke": "#2E6F9E",
+        "strokeWidth": 1,
+        "strokeOpacity": 0.24,
+        "fill": "#2E6F9E",
+        "fillOpacity": 0.08
+      },
+      "attribution": "Illustrative sample corridor"
+    },
+    {
+      "id": "river-historic",
+      "group": "river",
+      "type": "geojson",
+      "role": "overlay",
+      "enabledByDefault": true,
+      "label": {
+        "en": "Historic Berkel",
+        "de": "Historische Berkel",
+        "nl": "Historische Berkel"
+      },
+      "url": "data/geo/river-historic.geojson",
+      "style": {
+        "stroke": "#C9821E",
+        "strokeWidth": 2.5,
+        "strokeOpacity": 0.92,
+        "dashArray": "6 4"
+      },
+      "attribution": "Illustrative sample line"
+    },
+    {
+      "id": "river-historic-corridor",
+      "group": "river",
+      "type": "geojson",
+      "role": "overlay",
+      "enabledByDefault": false,
+      "label": {
+        "en": "Historic corridor",
+        "de": "Historischer Korridor",
+        "nl": "Historische corridor"
+      },
+      "url": "data/geo/river-historic-corridor.geojson",
+      "style": {
+        "stroke": "#C9821E",
+        "strokeWidth": 1,
+        "strokeOpacity": 0.24,
+        "fill": "#C9821E",
+        "fillOpacity": 0.08
+      },
+      "attribution": "Illustrative sample corridor"
+    },
+    {
+      "id": "historic-overlay-1843",
+      "group": "historic",
+      "type": "historic_overlay",
+      "enabledByDefault": false,
+      "label": {
+        "en": "Historic map footprint, 1843",
+        "de": "Historische Kartenfläche, 1843",
+        "nl": "Historische kaartdekking, 1843"
+      },
+      "url": "data/geo/historic-map-coverage.geojson",
+      "opacity": 0.7,
+      "time": {
+        "from": "1843",
+        "to": "1843",
+        "mode": "map-publication-period"
+      },
+      "attribution": "Illustrative historic map coverage"
+    },
+    {
+      "id": "topotijdreis-1900",
+      "group": "historic",
+      "type": "external_historic_tile",
+      "enabledByDefault": false,
+      "label": {
+        "en": "Topotijdreis around 1900",
+        "de": "Topotijdreis um 1900",
+        "nl": "Topotijdreis rond 1900"
+      },
+      "provider": "topotijdreis",
+      "year": 1900,
+      "requiresNetwork": true,
+      "allowInPublicDefaultBuild": true,
+      "opacity": 0.7,
+      "time": {
+        "from": "1900",
+        "to": "1900",
+        "mode": "map-publication-period"
+      },
+      "attribution": "Topotijdreis / Kadaster, verify endpoint and attribution before production use",
+      "documentation": "documentation/014-external-map-layers.md#topotijdreis"
+    },
+    {
+      "id": "google-satellite",
+      "group": "external",
+      "type": "google_map_tiles",
+      "enabledByDefault": false,
+      "label": {
+        "en": "Google satellite",
+        "de": "Google Satellit",
+        "nl": "Google satelliet"
+      },
+      "provider": "google",
+      "mapType": "satellite",
+      "requiresApiKey": true,
+      "requiresBilling": true,
+      "requiresNetwork": true,
+      "allowInPublicDefaultBuild": false,
+      "attribution": "Google Maps Platform, subject to provider terms",
+      "documentation": "documentation/014-external-map-layers.md#google-satellite"
+    },
+    {
+      "id": "google-earth-3d-optional",
+      "group": "external",
+      "type": "google_earth_3d_optional",
+      "enabledByDefault": false,
+      "label": {
+        "en": "Google Earth style 3D",
+        "de": "Google Earth 3D",
+        "nl": "Google Earth 3D"
+      },
+      "provider": "google",
+      "requiresApiKey": true,
+      "requiresBilling": true,
+      "requiresNetwork": true,
+      "allowInPublicDefaultBuild": false,
+      "attribution": "Google Maps Platform, subject to provider terms",
+      "documentation": "documentation/014-external-map-layers.md#google-earth-3d"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "berkelRegionBbox": [51.8, 5.9, 52.35, 7.2],
+  "riverbankBuildingDistanceM": 75,
+  "overpassUrl": "https://overpass-api.de/api/interpreter",
+  "overpassUrls": [
+    "https://overpass-api.de/api/interpreter",
+    "https://lz4.overpass-api.de/api/interpreter",
+    "https://z.overpass-api.de/api/interpreter"
+  ],
+  "overpassTimeoutSeconds": 180,
+  "requestDelaySeconds": 2.0,
+  "maxTileSubdivisionDepth": 2,
+  "maxRequestRetries": 3,
+  "retryBackoffSeconds": 5.0,
+  "continueOnQueryFailure": false,
+  "alwaysTileQueryPrefixes": [
+    "02-roads-paths",
+    "03-bridges-waterworks",
+    "04-places-heritage",
+    "06-settlements",
+    "05-buildings-near-riverbanks"
+  ],
+  "userAgent": "BerkelRiverAtlas/0.1 (+https://github.com/louwersj/berkelriveratlas)",
+  "notes": "Buildings are included when they fall within the configured distance of the waterway centerline. This acts as a practical proxy for both river banks."
+}

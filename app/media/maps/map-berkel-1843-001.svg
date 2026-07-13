@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#efe4c6"/>
+  <rect x="35" y="35" width="1130" height="730" fill="none" stroke="#8a867c" stroke-width="6"/>
+  <path d="M120 520 C250 350 430 330 620 430 S930 500 1080 360" fill="none" stroke="#c9821e" stroke-width="16" stroke-dasharray="18 14"/>
+  <path d="M160 200 L980 610" stroke="#a8a69c" stroke-width="4"/>
+  <path d="M250 130 L310 680" stroke="#a8a69c" stroke-width="4"/>
+  <text x="100" y="120" fill="#30302d" font-size="58" font-family="Georgia, serif">Historic map overlay sample</text>
+  <text x="100" y="180" fill="#66665f" font-size="30" font-family="Georgia, serif">Illustrative 1843 footprint for atlas overlay behavior</text>
+</svg>
+

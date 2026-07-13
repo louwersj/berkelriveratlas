@@ -1,0 +1,62 @@
+{
+  "@context": {
+    "schema": "https://schema.org/",
+    "sameAs": {
+      "@id": "schema:sameAs",
+      "@type": "@id"
+    }
+  },
+  "generated_at": "2026-07-13T09:50:45Z",
+  "@graph": [
+    {
+      "@id": "image-borculo-mill-001",
+      "@type": "schema:Thing",
+      "schema:name": "Illustrative historic mill image"
+    },
+    {
+      "@id": "map-berkel-1843-001",
+      "@type": "schema:Thing",
+      "schema:name": "Illustrative historic map of the Berkel near Borculo, 1843"
+    },
+    {
+      "@id": "bridge-borculo-001",
+      "@type": "schema:Thing",
+      "schema:name": "Bridge crossing near the sample river bend"
+    },
+    {
+      "@id": "river-segment-borculo-001",
+      "@type": "schema:Thing",
+      "schema:name": "Sample river segment near Borculo"
+    },
+    {
+      "@id": "watermill-borculo-001",
+      "@type": "schema:Thing",
+      "schema:name": "Former watermill near Borculo"
+    },
+    {
+      "@id": "page-about",
+      "@type": "schema:Thing",
+      "schema:name": "About The Berkel River Atlas"
+    },
+    {
+      "@id": "page-contact",
+      "@type": "schema:Thing",
+      "schema:name": "Contact"
+    },
+    {
+      "@id": "page-contribute",
+      "@type": "schema:Thing",
+      "schema:name": "Contribute"
+    },
+    {
+      "@id": "page-methodology",
+      "@type": "schema:Thing",
+      "schema:name": "Methodology"
+    },
+    {
+      "@id": "story-water-and-work-001",
+      "@type": "schema:Thing",
+      "schema:name": "Water and work along the Berkel"
+    }
+  ]
+}

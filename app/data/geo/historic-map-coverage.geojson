@@ -1,0 +1,17 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Historic map coverage sample",
+        "sample": true
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[6.49, 52.09], [6.58, 52.09], [6.58, 52.145], [6.49, 52.145], [6.49, 52.09]]]
+      }
+    }
+  ]
+}
+

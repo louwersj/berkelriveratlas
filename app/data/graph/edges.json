@@ -1,0 +1,57 @@
+[
+  {
+    "source": "image-borculo-mill-001",
+    "target": "watermill-borculo-001",
+    "type": "depicts"
+  },
+  {
+    "source": "map-berkel-1843-001",
+    "target": "river-segment-borculo-001",
+    "type": "depicts"
+  },
+  {
+    "source": "map-berkel-1843-001",
+    "target": "watermill-borculo-001",
+    "type": "evidence"
+  },
+  {
+    "source": "bridge-borculo-001",
+    "target": "river-segment-borculo-001",
+    "type": "crosses"
+  },
+  {
+    "source": "bridge-borculo-001",
+    "target": "watermill-borculo-001",
+    "type": "located_near"
+  },
+  {
+    "source": "watermill-borculo-001",
+    "target": "bridge-borculo-001",
+    "type": "located_near"
+  },
+  {
+    "source": "watermill-borculo-001",
+    "target": "story-water-and-work-001",
+    "type": "part_of_theme"
+  },
+  {
+    "source": "watermill-borculo-001",
+    "target": "osm:way/123456789",
+    "type": "same_as"
+  },
+  {
+    "source": "watermill-borculo-001",
+    "target": "wikidata:Q123456",
+    "type": "same_as"
+  },
+  {
+    "source": "story-water-and-work-001",
+    "target": "watermill-borculo-001",
+    "type": "part_of"
+  },
+  {
+    "source": "story-water-and-work-001",
+    "target": "bridge-borculo-001",
+    "type": "mentions"
+  }
+]

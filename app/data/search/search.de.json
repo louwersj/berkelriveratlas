@@ -1,0 +1,62 @@
+[
+  {
+    "id": "image-borculo-mill-001",
+    "title": "Illustratives historisches Mühlenbild",
+    "summary": "Ein Beispiel-Mediensatz mit Bildmetadaten, Rechten und räumlicher Relevanz.",
+    "content_path": "content/media/image-borculo-mill-001.md"
+  },
+  {
+    "id": "map-berkel-1843-001",
+    "title": "Illustrative historische Karte der Berkel bei Borculo, 1843",
+    "summary": "Eine Beispiel-Kartenfläche im Stil des 19. Jahrhunderts zur Demonstration historischer Overlays.",
+    "content_path": "content/media/map-berkel-1843-001.md"
+  },
+  {
+    "id": "bridge-borculo-001",
+    "title": "Brücke nahe der Beispiel-Flussschleife",
+    "summary": "Illustrativer Querungspunkt zur Darstellung heutiger Flussbeziehungen im Atlas.",
+    "content_path": "content/objects/bridge-borculo-001.md"
+  },
+  {
+    "id": "river-segment-borculo-001",
+    "title": "Beispielhafter Flussabschnitt bei Borculo",
+    "summary": "Illustrativer Abschnitt für Beziehungseinträge in den Beispieldaten des Atlas.",
+    "content_path": "content/objects/river-segment-borculo-001.md"
+  },
+  {
+    "id": "watermill-borculo-001",
+    "title": "Ehemalige Wassermühle bei Borculo",
+    "summary": "Illustratives Beispielobjekt zu einem historischen Mühlenstandort an der Berkel.",
+    "content_path": "content/objects/watermill-borculo-001.md"
+  },
+  {
+    "id": "page-about",
+    "title": "Über den Berkel-Flussatlas",
+    "summary": "",
+    "content_path": "content/pages/about.md"
+  },
+  {
+    "id": "page-contact",
+    "title": "Kontakt",
+    "summary": "",
+    "content_path": "content/pages/contact.md"
+  },
+  {
+    "id": "page-contribute",
+    "title": "Beitragen",
+    "summary": "",
+    "content_path": "content/pages/contribute.md"
+  },
+  {
+    "id": "page-methodology",
+    "title": "Methodik",
+    "summary": "",
+    "content_path": "content/pages/methodology.md"
+  },
+  {
+    "id": "story-water-and-work-001",
+    "title": "Wasser und Arbeit entlang der Berkel",
+    "summary": "Eine Beispielgeschichte, die Mühlen, Querungen und historische Bilder entlang des Flusses verbindet.",
+    "content_path": "content/stories/story-water-and-work-001.md"
+  }
+]

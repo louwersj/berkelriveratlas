@@ -1,0 +1,23 @@
+{
+  "siteTitle": {
+    "en": "The Berkel River Atlas",
+    "de": "Der Berkel-Flussatlas",
+    "nl": "De Berkel Rivieratlas"
+  },
+  "shortTitle": {
+    "en": "Berkel Atlas",
+    "de": "Berkel Atlas",
+    "nl": "Berkel Atlas"
+  },
+  "tagline": {
+    "en": "Follow the river through time",
+    "de": "Dem Fluss durch die Zeit folgen",
+    "nl": "Volg de rivier door de tijd"
+  },
+  "defaultLanguage": "en",
+  "supportedLanguages": ["en", "de", "nl"],
+  "dataBaseUrl": "data",
+  "contentBaseUrl": "content",
+  "repositoryUrl": "https://github.com/louwersj/berkelriveratlas"
+}
+

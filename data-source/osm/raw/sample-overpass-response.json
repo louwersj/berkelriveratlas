@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-07-13T10:39:36Z",
+  "note": "Offline sample placeholder. Replace by running real Overpass queries locally when network access is intended.",
+  "settings": {
+    "berkelRegionBbox": [
+      51.8,
+      5.9,
+      52.35,
+      7.2
+    ],
+    "riverbankBuildingDistanceM": 75,
+    "notes": "Buildings are included when they fall within the configured distance of the waterway centerline. This acts as a practical proxy for both river banks."
+  },
+  "elements": []
+}

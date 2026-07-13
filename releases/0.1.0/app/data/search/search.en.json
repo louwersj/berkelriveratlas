@@ -1,0 +1,62 @@
+[
+  {
+    "id": "image-borculo-mill-001",
+    "title": "Illustrative historic mill image",
+    "summary": "A sample media record showing image metadata, rights, and spatial relevance.",
+    "content_path": "content/media/image-borculo-mill-001.md"
+  },
+  {
+    "id": "map-berkel-1843-001",
+    "title": "Illustrative historic map of the Berkel near Borculo, 1843",
+    "summary": "A sample nineteenth-century style map footprint used to demonstrate historic overlays.",
+    "content_path": "content/media/map-berkel-1843-001.md"
+  },
+  {
+    "id": "bridge-borculo-001",
+    "title": "Bridge crossing near the sample river bend",
+    "summary": "Illustrative crossing point used to show present-day river relationships in the atlas.",
+    "content_path": "content/objects/bridge-borculo-001.md"
+  },
+  {
+    "id": "river-segment-borculo-001",
+    "title": "Sample river segment near Borculo",
+    "summary": "Illustrative segment used for relation targets in the sample atlas data.",
+    "content_path": "content/objects/river-segment-borculo-001.md"
+  },
+  {
+    "id": "watermill-borculo-001",
+    "title": "Former watermill near Borculo",
+    "summary": "Illustrative sample object describing a historic mill location along the Berkel.",
+    "content_path": "content/objects/watermill-borculo-001.md"
+  },
+  {
+    "id": "page-about",
+    "title": "About The Berkel River Atlas",
+    "summary": "",
+    "content_path": "content/pages/about.md"
+  },
+  {
+    "id": "page-contact",
+    "title": "Contact",
+    "summary": "",
+    "content_path": "content/pages/contact.md"
+  },
+  {
+    "id": "page-contribute",
+    "title": "Contribute",
+    "summary": "",
+    "content_path": "content/pages/contribute.md"
+  },
+  {
+    "id": "page-methodology",
+    "title": "Methodology",
+    "summary": "",
+    "content_path": "content/pages/methodology.md"
+  },
+  {
+    "id": "story-water-and-work-001",
+    "title": "Water and work along the Berkel",
+    "summary": "A sample story connecting mills, crossings, and historic imagery along the river.",
+    "content_path": "content/stories/story-water-and-work-001.md"
+  }
+]

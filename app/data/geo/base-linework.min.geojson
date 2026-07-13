@@ -1,0 +1,32 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "osm",
+        "category": "road",
+        "name": "Sample road",
+        "display_class": "road_secondary"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[6.47, 52.106], [6.592, 52.106]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "source": "osm",
+        "category": "path",
+        "name": "Sample path",
+        "display_class": "path"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[6.507, 52.081], [6.559, 52.148]]
+      }
+    }
+  ]
+}
+

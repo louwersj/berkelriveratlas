@@ -1,0 +1,17 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Current Berkel sample line",
+        "sample": true
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [[6.483, 52.085], [6.508, 52.101], [6.529, 52.114], [6.551, 52.123], [6.579, 52.136]]
+      }
+    }
+  ]
+}
+

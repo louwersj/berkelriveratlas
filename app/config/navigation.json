@@ -1,0 +1,56 @@
+{
+  "main": [
+    {
+      "id": "explore",
+      "type": "route",
+      "label": {
+        "en": "Explore",
+        "de": "Erkunden",
+        "nl": "Verkennen"
+      },
+      "route": "#/en/explore"
+    },
+    {
+      "id": "about",
+      "type": "static_page",
+      "label": {
+        "en": "About",
+        "de": "Über das Projekt",
+        "nl": "Over het project"
+      },
+      "contentPath": "content/pages/about.md"
+    },
+    {
+      "id": "methodology",
+      "type": "static_page",
+      "label": {
+        "en": "Methodology",
+        "de": "Methodik",
+        "nl": "Methodologie"
+      },
+      "contentPath": "content/pages/methodology.md"
+    },
+    {
+      "id": "contact",
+      "type": "static_page",
+      "label": {
+        "en": "Contact us",
+        "de": "Kontakt",
+        "nl": "Contact"
+      },
+      "contentPath": "content/pages/contact.md"
+    },
+    {
+      "id": "repository",
+      "type": "external_link",
+      "label": {
+        "en": "Data repository",
+        "de": "Daten-Repository",
+        "nl": "Datarepository"
+      },
+      "url": "https://github.com/louwersj/berkelriveratlas",
+      "openInNewTab": true
+    }
+  ]
+}
+
