@@ -71,6 +71,7 @@ As of `2026-07-13`:
 - Vite source code exists but was not build-verified on this workstation because Node was unavailable.
 - The OSM pipeline is implemented for live Overpass refresh, but it depends on network access when `refresh-osm` is used.
 - Large OSM-derived runtime layers now use manifest-driven chunk bundles with a hard validation size cap so tracked files stay Git-safe.
+- Large spatial runtime layers can also use tile manifests and tracked `_tiles/` files for bbox-driven loading.
 
 ## Update Rules
 

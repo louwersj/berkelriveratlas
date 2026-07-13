@@ -27,15 +27,18 @@ def main() -> int:
         layer_type = layer.get("type")
         url = layer.get("url")
         manifest_url = layer.get("manifestUrl")
+        tile_manifest_url = layer.get("tileManifestUrl")
         if layer_type == "geojson":
             if url:
                 local_path = APP_DIR / "data" / Path(url).relative_to("data")
                 if not local_path.exists():
                     errors.append(f"missing local layer file for {layer_id}: {url}")
+            elif tile_manifest_url:
+                errors.extend(validate_tile_manifest(layer_id, tile_manifest_url))
             elif manifest_url:
                 errors.extend(validate_manifest(layer_id, manifest_url))
             else:
-                errors.append(f"geojson layer {layer_id} is missing both url and manifestUrl")
+                errors.append(f"geojson layer {layer_id} is missing url, tileManifestUrl, and manifestUrl")
 
         if layer.get("requiresNetwork") or layer_type in {"wms_tile", "wmts_tile", "xyz_tile", "external_historic_tile"}:
             if not layer.get("attribution"):
@@ -90,12 +93,36 @@ def validate_geo_asset_sizes() -> list[str]:
                     f"tracked geo asset exceeds {MAX_TRACKED_GEO_ASSET_BYTES} bytes: {path} ({size} bytes)"
                 )
         for path in root.rglob("*.json"):
-            if path.name.endswith(".manifest.json"):
+            if path.name.endswith(".manifest.json") or path.name.endswith(".tiles.json"):
                 size = path.stat().st_size
                 if size > MAX_TRACKED_GEO_ASSET_BYTES:
                     errors.append(
                         f"tracked manifest exceeds {MAX_TRACKED_GEO_ASSET_BYTES} bytes: {path} ({size} bytes)"
                     )
+    return errors
+
+
+def validate_tile_manifest(layer_id: str, manifest_url: str) -> list[str]:
+    errors: list[str] = []
+    manifest_path = APP_DIR / "data" / Path(manifest_url).relative_to("data")
+    if not manifest_path.exists():
+        return [f"missing local tile manifest for {layer_id}: {manifest_url}"]
+
+    payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    tiles = payload.get("tiles", [])
+    if not tiles:
+        errors.append(f"tile manifest {layer_id} has no tiles")
+        return errors
+
+    for tile in tiles:
+        tile_url = tile.get("url")
+        if not tile_url:
+            errors.append(f"tile manifest {layer_id} has a tile without a url")
+            continue
+        tile_path = APP_DIR / "data" / Path(tile_url).relative_to("data")
+        if not tile_path.exists():
+            errors.append(f"missing local tile for {layer_id}: {tile_url}")
+
     return errors
 
 

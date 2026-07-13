@@ -18,7 +18,7 @@ async function start() {
   state.route = parseRoute(location.hash, state.data.site.supportedLanguages, state.data.site.defaultLanguage);
   renderShell();
   bindEvents();
-  await ensureDefaultLayersLoaded();
+  ensureDefaultLayersLoaded();
   await renderRoute();
 }
 
@@ -188,14 +188,24 @@ async function ensureDefaultLayersLoaded() {
 }
 
 async function ensureLayerData(layer) {
-  if (state.layerCache.has(layer.id) || layer.type !== "geojson" || (!layer.url && !layer.manifestUrl)) {
+  if (layer.type !== "geojson" || (!layer.url && !layer.manifestUrl && !layer.tileManifestUrl)) {
+    return;
+  }
+  if (layer.tileManifestUrl) {
+    await ensureTileLayerData(layer, getCurrentViewportBounds());
+    return;
+  }
+  if (state.layerCache.has(layer.id)) {
     return;
   }
   const geojson = await loadGeoJsonLayer(layer);
-  state.layerCache.set(layer.id, geojson);
+  state.layerCache.set(layer.id, { mode: "full", geojson });
 }
 
 async function loadGeoJsonLayer(layer) {
+  if (layer.tileManifestUrl) {
+    return loadTiledGeoJsonLayer(layer, getCurrentViewportBounds());
+  }
   if (layer.manifestUrl) {
     const manifest = await fetchJson(layer.manifestUrl);
     const chunks = await Promise.all(manifest.chunks.map((chunk) => fetchJson(chunk.url)));
@@ -205,6 +215,36 @@ async function loadGeoJsonLayer(layer) {
     };
   }
   return fetchJson(layer.url);
+}
+
+async function ensureTileLayerData(layer, bounds) {
+  const existing = state.layerCache.get(layer.id);
+  let cacheEntry = existing;
+  if (!cacheEntry) {
+    const manifest = await fetchJson(layer.tileManifestUrl);
+    cacheEntry = {
+      mode: "tiles",
+      manifest,
+      tiles: new Map()
+    };
+    state.layerCache.set(layer.id, cacheEntry);
+  }
+
+  const neededTiles = cacheEntry.manifest.tiles.filter((tile) => tileIntersectsBounds(tile.bbox, bounds));
+  await Promise.all(
+    neededTiles.map(async (tile) => {
+      if (cacheEntry.tiles.has(tile.url)) {
+        return;
+      }
+      const payload = await fetchJson(tile.url);
+      cacheEntry.tiles.set(tile.url, payload);
+    })
+  );
+}
+
+async function loadTiledGeoJsonLayer(layer, bounds) {
+  await ensureTileLayerData(layer, bounds);
+  return buildVisibleTileCollection(layer.id, bounds);
 }
 
 function bindEvents() {
@@ -253,12 +293,11 @@ function bindEvents() {
       }
       if (target.checked) {
         state.activeLayers.add(layer.id);
-        await ensureLayerData(layer);
       } else {
         state.activeLayers.delete(layer.id);
       }
       renderLayersDrawer();
-      renderMap();
+      await renderRoute();
     }
   });
 
@@ -273,9 +312,11 @@ function bindEvents() {
 }
 
 async function renderRoute() {
-  renderMap();
   const panel = document.querySelector("#content-panel");
   const visibleIds = getVisibleIds();
+  const viewportBounds = getCurrentViewportBounds();
+  await ensureActiveLayerData(viewportBounds);
+  renderMap(viewportBounds);
 
   if (state.route.view === "object" && state.route.id) {
     const feature = state.data.mapObjects.features.find((entry) => entry.properties.id === state.route.id);
@@ -312,14 +353,29 @@ async function renderRoute() {
   panel.innerHTML = renderExplorePanel(visibleIds.size);
 }
 
-function renderMap() {
+async function ensureActiveLayerData(bounds) {
+  const activeGeoLayers = state.data.layers.layers.filter((layer) => state.activeLayers.has(layer.id));
+  for (const layer of activeGeoLayers) {
+    await ensureLayerDataForBounds(layer, bounds);
+  }
+}
+
+async function ensureLayerDataForBounds(layer, bounds) {
+  if (layer.tileManifestUrl) {
+    await ensureTileLayerData(layer, bounds);
+    return;
+  }
+  await ensureLayerData(layer);
+}
+
+function renderMap(bounds) {
   const container = document.querySelector("#map");
   const features = state.data.mapObjects.features.filter((feature) => getVisibleIds().has(feature.properties.id));
   const layerDefs = state.data.layers.layers.filter((layer) => state.activeLayers.has(layer.id));
   const layerFeatures = [];
 
   layerDefs.forEach((layer) => {
-    const geojson = state.layerCache.get(layer.id);
+    const geojson = getLayerGeoJson(layer, bounds);
     if (geojson && Array.isArray(geojson.features)) {
       geojson.features.forEach((feature) => {
         layerFeatures.push({ feature, layer });
@@ -327,10 +383,6 @@ function renderMap() {
     }
   });
 
-  const bounds = computeBounds([
-    ...features.map((feature) => feature.geometry),
-    ...layerFeatures.map((entry) => entry.feature.geometry)
-  ]);
   const width = 1000;
   const height = 700;
   const padding = 48;
@@ -351,6 +403,66 @@ function renderMap() {
       <text x="40" y="${height - 30}" fill="#66665f" font-size="18">Static sample atlas map</text>
     </svg>
   `;
+}
+
+function getLayerGeoJson(layer, bounds) {
+  const cacheEntry = state.layerCache.get(layer.id);
+  if (!cacheEntry) {
+    return null;
+  }
+  if (cacheEntry.mode === "tiles") {
+    return buildVisibleTileCollection(layer.id, bounds);
+  }
+  return cacheEntry.geojson;
+}
+
+function buildVisibleTileCollection(layerId, bounds) {
+  const cacheEntry = state.layerCache.get(layerId);
+  if (!cacheEntry || cacheEntry.mode !== "tiles") {
+    return null;
+  }
+  const features = [];
+  const seen = new Set();
+  cacheEntry.manifest.tiles
+    .filter((tile) => tileIntersectsBounds(tile.bbox, bounds))
+    .forEach((tile) => {
+      const payload = cacheEntry.tiles.get(tile.url);
+      if (!payload || !Array.isArray(payload.features)) {
+        return;
+      }
+      payload.features.forEach((feature) => {
+        const key = featureKey(feature);
+        if (seen.has(key)) {
+          return;
+        }
+        seen.add(key);
+        features.push(feature);
+      });
+    });
+  return {
+    type: "FeatureCollection",
+    features
+  };
+}
+
+function getCurrentViewportBounds() {
+  const visibleFeatures = state.data.mapObjects.features.filter((feature) => getVisibleIds().has(feature.properties.id));
+  if (visibleFeatures.length > 0) {
+    return computeBounds(visibleFeatures.map((feature) => feature.geometry));
+  }
+
+  const tiledLayer = state.data.layers.layers.find((layer) => layer.tileManifestUrl && state.activeLayers.has(layer.id));
+  const cachedLayer = tiledLayer ? state.layerCache.get(tiledLayer.id) : null;
+  if (cachedLayer && cachedLayer.mode === "tiles") {
+    return boundsFromArray(cachedLayer.manifest.bbox);
+  }
+
+  return {
+    minLon: 5.9,
+    minLat: 51.8,
+    maxLon: 7.2,
+    maxLat: 52.35
+  };
 }
 
 function renderObjectFeature(feature, bounds, width, height, padding) {
@@ -402,6 +514,27 @@ function computeBounds(geometries) {
     maxLat = Math.max(maxLat, lat);
   }));
   return { minLon, minLat, maxLon, maxLat };
+}
+
+function boundsFromArray(bbox) {
+  return {
+    minLat: bbox[0],
+    minLon: bbox[1],
+    maxLat: bbox[2],
+    maxLon: bbox[3]
+  };
+}
+
+function tileIntersectsBounds(tileBbox, bounds) {
+  return !(tileBbox[3] < bounds.minLon || tileBbox[1] > bounds.maxLon || tileBbox[2] < bounds.minLat || tileBbox[0] > bounds.maxLat);
+}
+
+function featureKey(feature) {
+  const props = feature.properties || {};
+  if (props.osm_type && props.osm_id) {
+    return `${props.osm_type}:${props.osm_id}`;
+  }
+  return JSON.stringify(feature.geometry || {}) + JSON.stringify(props.name || "");
 }
 
 function walkCoordinates(coords, callback) {

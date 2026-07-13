@@ -10,6 +10,7 @@ Common fields in `layers.json`:
 - `label`: multilingual label map
 - `url`: local or external layer source
 - `manifestUrl`: manifest-driven local GeoJSON bundle source for large layers
+- `tileManifestUrl`: bbox-driven spatial tile manifest for large map layers
 - `style`: simple line and fill styling for GeoJSON
 - `opacity`: default opacity
 - `time`: optional time coverage

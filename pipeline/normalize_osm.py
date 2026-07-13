@@ -8,6 +8,8 @@ from typing import Any
 from common import APP_DIR, DATA_SOURCE_DIR, ensure_directory, now_iso, read_text, write_json
 
 CHUNK_SIZE_LIMIT_BYTES = 4_750_000
+SPATIAL_TILE_DIRECTORY_NAME = "_tiles"
+SPATIAL_TILE_GRID = (16, 16)
 GENERATED_LAYER_BASENAMES = (
     "base-linework.min",
     "base-paths.min",
@@ -137,22 +139,39 @@ def sync_geo_directory(source_dir: Path, target_dir: Path) -> None:
     target_bundle_dir = target_dir / CHUNK_DIRECTORY_NAME
     if bundle_dir.exists():
         shutil.copytree(bundle_dir, target_bundle_dir, dirs_exist_ok=True)
+    tile_dir = source_dir / SPATIAL_TILE_DIRECTORY_NAME
+    target_tile_dir = target_dir / SPATIAL_TILE_DIRECTORY_NAME
+    if tile_dir.exists():
+        shutil.copytree(tile_dir, target_tile_dir, dirs_exist_ok=True)
 
 
 def write_layers(target_dir: Path, layers: dict[str, dict[str, Any]]) -> None:
     bundle_dir = target_dir / CHUNK_DIRECTORY_NAME
+    tile_dir = target_dir / SPATIAL_TILE_DIRECTORY_NAME
     ensure_directory(bundle_dir)
+    ensure_directory(tile_dir)
     for filename, payload in layers.items():
-        write_layer(target_dir, bundle_dir, filename, payload)
+        write_layer(target_dir, bundle_dir, tile_dir, filename, payload)
 
 
-def write_layer(target_dir: Path, bundle_dir: Path, filename: str, payload: dict[str, Any]) -> None:
+def write_layer(target_dir: Path, bundle_dir: Path, tile_dir: Path, filename: str, payload: dict[str, Any]) -> None:
     chunks = chunk_features(payload["features"])
+    layer_id = filename.removesuffix(".geojson")
+    if len(chunks) > 1:
+        write_bundle_manifest(bundle_dir, target_dir, layer_id, payload, chunks)
+        write_tile_manifest(tile_dir, target_dir, layer_id, payload)
+        return
     if len(chunks) <= 1:
         write_json(target_dir / filename, payload, indent=None)
         return
 
-    layer_id = filename.removesuffix(".geojson")
+def write_bundle_manifest(
+    bundle_dir: Path,
+    target_dir: Path,
+    layer_id: str,
+    payload: dict[str, Any],
+    chunks: list[list[dict[str, Any]]],
+) -> None:
     layer_bundle_dir = bundle_dir / layer_id
     ensure_directory(layer_bundle_dir)
     manifest_chunks: list[dict[str, Any]] = []
@@ -186,13 +205,87 @@ def write_layer(target_dir: Path, bundle_dir: Path, filename: str, payload: dict
     write_json(target_dir / f"{layer_id}.manifest.json", manifest)
 
 
+def write_tile_manifest(tile_dir: Path, target_dir: Path, layer_id: str, payload: dict[str, Any]) -> None:
+    features = payload["features"]
+    layer_bbox = collection_bbox(features)
+    if layer_bbox is None:
+        return
+
+    rows, cols = SPATIAL_TILE_GRID
+    south, west, north, east = layer_bbox
+    lat_step = max((north - south) / rows, 0.000001)
+    lon_step = max((east - west) / cols, 0.000001)
+    buckets: dict[tuple[int, int], list[dict[str, Any]]] = {}
+
+    for feature in features:
+        feature_bbox = geometry_bbox(feature.get("geometry"))
+        if feature_bbox is None:
+            continue
+        min_lat, min_lon, max_lat, max_lon = feature_bbox
+        row_start = clamp_tile_index(int((min_lat - south) / lat_step), rows)
+        row_end = clamp_tile_index(int((max_lat - south) / lat_step), rows)
+        col_start = clamp_tile_index(int((min_lon - west) / lon_step), cols)
+        col_end = clamp_tile_index(int((max_lon - west) / lon_step), cols)
+        for row in range(row_start, row_end + 1):
+            for col in range(col_start, col_end + 1):
+                buckets.setdefault((row, col), []).append(feature)
+
+    layer_tile_dir = tile_dir / layer_id
+    ensure_directory(layer_tile_dir)
+    manifest_tiles: list[dict[str, Any]] = []
+
+    for row in range(rows):
+        for col in range(cols):
+            tile_features = buckets.get((row, col), [])
+            if not tile_features:
+                continue
+            tile_south = south + (lat_step * row)
+            tile_west = west + (lon_step * col)
+            tile_north = north if row == rows - 1 else south + (lat_step * (row + 1))
+            tile_east = east if col == cols - 1 else west + (lon_step * (col + 1))
+            tile_id = f"r{row + 1:02d}-c{col + 1:02d}"
+            tile_filename = f"{tile_id}.geojson"
+            tile_relative_url = f"data/geo/{SPATIAL_TILE_DIRECTORY_NAME}/{layer_id}/{tile_filename}"
+            tile_collection = {
+                "type": "FeatureCollection",
+                "generated_at": payload.get("generated_at"),
+                "features": tile_features,
+            }
+            write_json(layer_tile_dir / tile_filename, tile_collection, indent=None)
+            manifest_tiles.append(
+                {
+                    "id": tile_id,
+                    "row": row + 1,
+                    "col": col + 1,
+                    "bbox": [tile_south, tile_west, tile_north, tile_east],
+                    "url": tile_relative_url,
+                    "featureCount": len(tile_features),
+                    "bytes": json_size_bytes(tile_collection),
+                }
+            )
+
+    manifest = {
+        "type": "geojson_tile_set",
+        "generatedAt": payload.get("generated_at"),
+        "layerId": layer_id,
+        "featureCount": len(features),
+        "tileGrid": [rows, cols],
+        "bbox": [south, west, north, east],
+        "tiles": manifest_tiles,
+    }
+    write_json(target_dir / f"{layer_id}.tiles.json", manifest)
+
+
 def clear_generated_outputs(directory: Path) -> None:
     bundle_dir = directory / CHUNK_DIRECTORY_NAME
+    tile_dir = directory / SPATIAL_TILE_DIRECTORY_NAME
     if bundle_dir.exists():
         shutil.rmtree(bundle_dir)
+    if tile_dir.exists():
+        shutil.rmtree(tile_dir)
 
     for basename in GENERATED_LAYER_BASENAMES:
-        for suffix in (".geojson", ".manifest.json"):
+        for suffix in (".geojson", ".manifest.json", ".tiles.json"):
             path = directory / f"{basename}{suffix}"
             if path.exists():
                 path.unlink()
@@ -232,6 +325,49 @@ def feature_size_bytes(feature: dict[str, Any]) -> int:
 
 def json_size_bytes(payload: dict[str, Any]) -> int:
     return len(json.dumps(payload, ensure_ascii=False, separators=(",", ":")).encode("utf-8")) + 1
+
+
+def clamp_tile_index(index: int, size: int) -> int:
+    return max(0, min(index, size - 1))
+
+
+def collection_bbox(features: list[dict[str, Any]]) -> tuple[float, float, float, float] | None:
+    latitudes: list[float] = []
+    longitudes: list[float] = []
+    for feature in features:
+        bbox = geometry_bbox(feature.get("geometry"))
+        if bbox is None:
+            continue
+        min_lat, min_lon, max_lat, max_lon = bbox
+        latitudes.extend([min_lat, max_lat])
+        longitudes.extend([min_lon, max_lon])
+    if not latitudes or not longitudes:
+        return None
+    return (min(latitudes), min(longitudes), max(latitudes), max(longitudes))
+
+
+def geometry_bbox(geometry: dict[str, Any] | None) -> tuple[float, float, float, float] | None:
+    if not geometry:
+        return None
+    coordinates = geometry.get("coordinates")
+    if coordinates is None:
+        return None
+    points: list[tuple[float, float]] = []
+    collect_points(coordinates, points)
+    if not points:
+        return None
+    longitudes = [point[0] for point in points]
+    latitudes = [point[1] for point in points]
+    return (min(latitudes), min(longitudes), max(latitudes), max(longitudes))
+
+
+def collect_points(coordinates: Any, points: list[tuple[float, float]]) -> None:
+    if isinstance(coordinates, list) and coordinates and isinstance(coordinates[0], (int, float)):
+        points.append((float(coordinates[0]), float(coordinates[1])))
+        return
+    if isinstance(coordinates, list):
+        for child in coordinates:
+            collect_points(child, points)
 
 
 def normalize_properties(feature: dict[str, Any]) -> dict[str, Any]:

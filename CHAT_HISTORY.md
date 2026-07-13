@@ -160,3 +160,26 @@ Investigate why refresh appeared stuck at `04-places-heritage` and address the k
 - Added explicit interrupt handling so `refresh-status.json` records an `interrupted` run instead of only showing a traceback.
 - Added a deeper tile subdivision override for `05-buildings-near-riverbanks` to improve its chance of finishing.
 - Added configurable per-query tile grids so heavy queries can start with much smaller tiles, with `05-buildings-near-riverbanks` now starting at `4x4`.
+
+## 2026-07-13 Spatial Tile Runtime
+
+### Session Summary
+
+Extended the chunked layer architecture into true spatial tiles so large map layers can be stored and rendered as small bbox-driven files.
+
+### User Request
+
+Move beyond whole-layer GeoJSON storage and implement a structure that stores and renders much smaller spatial tiles.
+
+### Work Completed
+
+- Reworked `pipeline/normalize_osm.py` to emit spatial tile manifests and tile files for large generated OSM layers.
+- Added tracked tile outputs under `data-source/geo/_tiles/` and `app/data/geo/_tiles/`.
+- Switched the default `base-linework` layer to `tileManifestUrl`.
+- Updated the checked-in static runtime to fetch only tiles intersecting the current viewport bounds and dedupe features across tile edges.
+- Updated the TypeScript/Leaflet runtime to load and refresh visible spatial tiles on map movement.
+- Extended layer validation so tile manifests and tile files are checked alongside bundle manifests.
+
+### Notes
+
+- The current large-layer tile grid is `16x16`, which keeps tracked tile files under the repo size cap while remaining small enough for bbox-based access.

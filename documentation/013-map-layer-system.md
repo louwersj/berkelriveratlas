@@ -5,6 +5,7 @@ Layer definitions live in `app/config/layers.json`.
 - Layers are grouped into base, river, historic, and external groups.
 - Local GeoJSON layers are the default public runtime.
 - Large local GeoJSON layers should be declared with `manifestUrl` so they load from chunk bundles instead of a single oversized file.
+- Large spatial layers can also use `tileManifestUrl` so the runtime fetches only tiles intersecting the current bbox.
 - Local OSM-derived building overlays can be added for near-river context, such as buildings within a configured distance of both river banks.
 - External historic and commercial layers are placeholders by default.
 - Attribution should be present whenever a layer depends on third-party data or services.

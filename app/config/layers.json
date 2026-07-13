@@ -47,7 +47,7 @@
         "de": "Klare Linienkarte",
         "nl": "Schone lijnkaart"
       },
-      "manifestUrl": "data/geo/base-linework.min.manifest.json",
+      "tileManifestUrl": "data/geo/base-linework.min.tiles.json",
       "style": {
         "stroke": "#30302D",
         "strokeWidth": 1.1,

@@ -71,6 +71,7 @@ export interface LayerDefinition {
   label: LanguageMap;
   url?: string;
   manifestUrl?: string;
+  tileManifestUrl?: string;
   attribution?: string;
   opacity?: number;
   provider?: string;
@@ -110,6 +111,26 @@ export interface GeoJsonBundleManifest {
   chunkCount: number;
   chunkSizeLimitBytes: number;
   chunks: GeoJsonChunkDescriptor[];
+}
+
+export interface GeoJsonTileDescriptor {
+  id: string;
+  row: number;
+  col: number;
+  bbox: [number, number, number, number];
+  url: string;
+  featureCount: number;
+  bytes: number;
+}
+
+export interface GeoJsonTileManifest {
+  type: "geojson_tile_set";
+  generatedAt: string;
+  layerId: string;
+  featureCount: number;
+  tileGrid: [number, number];
+  bbox: [number, number, number, number];
+  tiles: GeoJsonTileDescriptor[];
 }
 
 export interface LayersConfig {
