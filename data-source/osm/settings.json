@@ -10,6 +10,9 @@
   "overpassTimeoutSeconds": 180,
   "requestDelaySeconds": 2.0,
   "maxTileSubdivisionDepth": 2,
+  "queryMaxTileSubdivisionDepth": {
+    "05-buildings-near-riverbanks": 3
+  },
   "maxRequestRetries": 3,
   "retryBackoffSeconds": 5.0,
   "continueOnQueryFailure": false,

@@ -140,3 +140,21 @@ Identify which files are too large, switch to a smaller-file architecture, and m
 
 - The new architecture keeps Git as the system of record for small public layer artifacts, while treating raw refresh data and packaged releases as disposable local build outputs.
 - Future OSM-derived layers should use manifests automatically when they would otherwise exceed the per-file size budget.
+
+## 2026-07-13 Refresh Progress And Interrupt Handling
+
+### Session Summary
+
+Improved OSM refresh visibility after a heavy buildings-near-riverbanks query looked stuck after the heritage query completed.
+
+### User Request
+
+Investigate why refresh appeared stuck at `04-places-heritage` and address the keyboard-interrupt traceback behavior.
+
+### Work Completed
+
+- Confirmed the refresh was actually moving on to `05-buildings-near-riverbanks`, which is substantially heavier than `04-places-heritage`.
+- Added `STARTING` output before each query begins.
+- Added per-tile progress logging during tiled fetches, including subdivision retries and tile-level failures.
+- Added explicit interrupt handling so `refresh-status.json` records an `interrupted` run instead of only showing a traceback.
+- Added a deeper tile subdivision override for `05-buildings-near-riverbanks` to improve its chance of finishing.

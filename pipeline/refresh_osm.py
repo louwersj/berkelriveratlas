@@ -49,6 +49,7 @@ def main() -> int:
         rendered_query = render_query(template, query_context)
         rendered_path = rendered_dir / query_path.name
         rendered_path.write_text(rendered_query, encoding="utf-8")
+        print(f"STARTING: {query_path.name}")
 
         try:
             payload, fetch_meta = fetch_query_payload(settings, template, query_context, query_path.stem)
@@ -100,6 +101,26 @@ def main() -> int:
                 raise SystemExit(
                     f"OSM refresh failed on {query_path.name}. See {status_path.relative_to(DATA_SOURCE_DIR)} for details."
                 )
+        except KeyboardInterrupt:
+            results.append(
+                {
+                    "query": query_path.name,
+                    "status": "interrupted",
+                    "message": "Refresh interrupted by user.",
+                }
+            )
+            write_status_report(
+                status_path,
+                {
+                    "generated_at": now_iso(),
+                    "overall_status": "interrupted",
+                    "results": results,
+                },
+            )
+            print(
+                f"INTERRUPTED: {query_path.name}. Details written to {status_path.relative_to(DATA_SOURCE_DIR)}"
+            )
+            raise SystemExit(130)
 
         if index + 1 < len(queries):
             time.sleep(float(settings.get("requestDelaySeconds", 1.0)))
@@ -124,12 +145,14 @@ def write_status_report(path, payload: dict[str, object]) -> None:
 def fetch_query_payload(
     settings: dict, template: str, query_context: dict[str, str], query_name: str
 ) -> tuple[dict, dict]:
+    max_depth = max_tile_subdivision_depth(settings, query_name)
     if should_tile_first(settings, query_name):
         payload, tile_count = fetch_tiled_payload(
             settings,
             template,
             query_context,
-            max_depth=int(settings.get("maxTileSubdivisionDepth", 2)),
+            query_name=query_name,
+            max_depth=max_depth,
             current_depth=1,
         )
         return payload, {"mode": "tiled", "tile_count": tile_count}
@@ -145,7 +168,8 @@ def fetch_query_payload(
         settings,
         template,
         query_context,
-        max_depth=int(settings.get("maxTileSubdivisionDepth", 2)),
+        query_name=query_name,
+        max_depth=max_depth,
         current_depth=1,
     )
     return payload, {"mode": "tiled", "tile_count": tile_count}
@@ -203,25 +227,46 @@ def split_bbox_context(context: dict[str, str]) -> list[dict[str, str]]:
 
 
 def fetch_tiled_payload(
-    settings: dict, template: str, context: dict[str, str], max_depth: int, current_depth: int
+    settings: dict,
+    template: str,
+    context: dict[str, str],
+    query_name: str,
+    max_depth: int,
+    current_depth: int,
 ) -> tuple[dict, int]:
     merged_elements: dict[tuple[str, int], dict] = {}
     osm3s = None
     remarks: list[str] = []
     tile_count = 0
 
-    for tile_context in split_bbox_context(context):
+    for tile_index, tile_context in enumerate(split_bbox_context(context), start=1):
         tile_query = render_query(template, tile_context)
+        print(
+            "TILE: "
+            f"{query_name} depth={current_depth}/{max_depth} tile={tile_index}/4 "
+            f"bbox={tile_context['bbox_south']},{tile_context['bbox_west']},{tile_context['bbox_north']},{tile_context['bbox_east']}"
+        )
         try:
             payload = fetch_overpass(settings, tile_query)
             tile_count += 1
+            print(
+                f"TILE FETCHED: {query_name} depth={current_depth}/{max_depth} tile={tile_index}/4 "
+                f"({len(payload.get('elements', []))} elements)"
+            )
         except OverpassFetchError as error:
             if not error.retryable or current_depth >= max_depth:
+                print(
+                    f"TILE FAILED: {query_name} depth={current_depth}/{max_depth} tile={tile_index}/4 -> {error}"
+                )
                 raise
+            print(
+                f"TILE RETRYING VIA SUBDIVISION: {query_name} depth={current_depth}/{max_depth} tile={tile_index}/4 -> {error}"
+            )
             payload, nested_tile_count = fetch_tiled_payload(
                 settings,
                 template,
                 tile_context,
+                query_name=query_name,
                 max_depth=max_depth,
                 current_depth=current_depth + 1,
             )
@@ -297,6 +342,13 @@ def fetch_overpass(settings: dict, query: str) -> dict:
             raise last_error
 
     raise OverpassFetchError("Overpass request failed after all retry attempts.")
+
+
+def max_tile_subdivision_depth(settings: dict, query_name: str) -> int:
+    override = (settings.get("queryMaxTileSubdivisionDepth") or {}).get(query_name)
+    if override is not None:
+        return int(override)
+    return int(settings.get("maxTileSubdivisionDepth", 2))
 
 
 if __name__ == "__main__":
