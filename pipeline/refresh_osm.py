@@ -162,6 +162,8 @@ def write_status_report(path, payload: dict[str, object]) -> None:
 def apply_resume_from(
     queries: list, raw_dir, status_path, resume_from: str
 ) -> tuple[list, list[dict[str, object]]]:
+    raw_dir = raw_dir.resolve()
+    status_path = status_path.resolve()
     normalized_resume_from = normalize_query_identifier(resume_from)
     resume_index = next(
         (index for index, path in enumerate(queries) if normalize_query_identifier(path.name) == normalized_resume_from),
@@ -199,6 +201,7 @@ def load_prior_results(status_path) -> list[dict[str, object]]:
 
 
 def preserve_prior_result(query_name: str, output_path, previous_result: dict[str, object] | None) -> dict[str, object]:
+    output_path = output_path.resolve()
     payload = json.loads(read_text(output_path))
     element_count = len(payload.get("elements", []))
     result: dict[str, object] = {
