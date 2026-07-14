@@ -250,7 +250,7 @@ def fetch_query_payload(
 
     rendered_query = render_query(template, query_context)
     try:
-        return fetch_overpass(settings, rendered_query), {"mode": "single"}
+        return fetch_overpass(settings, rendered_query, request_label=query_name), {"mode": "single"}
     except OverpassFetchError as error:
         if not error.retryable:
             raise
@@ -351,7 +351,11 @@ def fetch_tiled_payload(
             f"bbox={tile_context['bbox_south']},{tile_context['bbox_west']},{tile_context['bbox_north']},{tile_context['bbox_east']}"
         )
         try:
-            payload = fetch_overpass(settings, tile_query)
+            payload = fetch_overpass(
+                settings,
+                tile_query,
+                request_label=f"{query_name} depth={current_depth}/{max_depth} path={tile_path_label}",
+            )
             tile_count += 1
             print(
                 f"TILE FETCHED: {query_name} depth={current_depth}/{max_depth} path={tile_path_label} tile={tile_index}/{len(tile_contexts)} "
@@ -365,7 +369,7 @@ def fetch_tiled_payload(
                 )
                 raise
             print(
-                f"TILE RETRYING VIA SUBDIVISION: {query_name} depth={current_depth}/{max_depth} path={tile_path_label} tile={tile_index}/{len(tile_contexts)} grid={rows}x{cols} -> {error}"
+                f"TILE RETRIES EXHAUSTED, SUBDIVIDING: {query_name} depth={current_depth}/{max_depth} path={tile_path_label} tile={tile_index}/{len(tile_contexts)} grid={rows}x{cols} -> {error}"
             )
             payload, nested_tile_count = fetch_tiled_payload(
                 settings,
@@ -396,13 +400,16 @@ def fetch_tiled_payload(
     )
 
 
-def fetch_overpass(settings: dict, query: str) -> dict:
+def fetch_overpass(settings: dict, query: str, request_label: str = "query") -> dict:
     timeout = int(settings.get("overpassTimeoutSeconds", 180)) + 30
-    max_retries = int(settings.get("maxRequestRetries", 3))
+    retry_rounds_before_subdivision = int(
+        settings.get("requestRetriesBeforeSubdivision", max(0, int(settings.get("maxRequestRetries", 3)) - 1))
+    )
+    total_attempts = retry_rounds_before_subdivision + 1
     backoff = float(settings.get("retryBackoffSeconds", 5.0))
     endpoints = settings.get("overpassUrls") or [settings["overpassUrl"]]
 
-    for attempt in range(max_retries):
+    for attempt in range(total_attempts):
         last_error: OverpassFetchError | None = None
         for endpoint in endpoints:
             request = urllib.request.Request(
@@ -442,7 +449,10 @@ def fetch_overpass(settings: dict, query: str) -> dict:
                     retryable=True,
                 )
 
-        if last_error and attempt + 1 < max_retries and last_error.retryable:
+        if last_error and attempt + 1 < total_attempts and last_error.retryable:
+            print(
+                f"RETRY: {request_label} attempt {attempt + 2}/{total_attempts} after failure -> {last_error}"
+            )
             time.sleep(backoff * (attempt + 1))
             continue
         if last_error:

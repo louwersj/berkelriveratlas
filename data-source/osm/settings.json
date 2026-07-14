@@ -41,6 +41,7 @@
       [4, 4]
     ]
   },
+  "requestRetriesBeforeSubdivision": 2,
   "maxRequestRetries": 3,
   "retryBackoffSeconds": 5.0,
   "continueOnQueryFailure": false,

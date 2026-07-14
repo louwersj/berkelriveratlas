@@ -160,6 +160,7 @@ Investigate why refresh appeared stuck at `04-places-heritage` and address the k
 - Added explicit interrupt handling so `refresh-status.json` records an `interrupted` run instead of only showing a traceback.
 - Added a deeper tile subdivision override for `05-buildings-near-riverbanks` to improve its chance of finishing.
 - Added configurable per-query tile grids so heavy queries can start with much smaller tiles, with `05-buildings-near-riverbanks` now starting at `4x4`.
+- Added explicit retry logging so tiled fetches now show two retry rounds before the script changes strategy and subdivides further.
 
 ## 2026-07-13 Spatial Tile Runtime
 
@@ -201,6 +202,7 @@ Make sure the fixed `16x16` tile structure is included in both fetching and the 
 - Extended fetch metadata so refresh outputs record the tile grid sequence used for each tiled query.
 - Applied the aligned fetch grid model to the heavy tiled Overpass queries.
 - Updated project docs so the fetch path and generated storage path are described as one coordinated spatial tiling model.
+- Kept two explicit retry rounds before any timeout-driven fetch strategy change, and surfaced those retries directly in the terminal output.
 
 ## 2026-07-14 Resumable OSM Refresh
 
