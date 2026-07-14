@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import time
@@ -17,6 +18,7 @@ class OverpassFetchError(RuntimeError):
 
 
 def main() -> int:
+    args = parse_args()
     settings = json.loads(read_text(DATA_SOURCE_DIR / "osm/settings.json"))
     raw_dir = DATA_SOURCE_DIR / "osm/raw"
     rendered_dir = raw_dir / "rendered-queries"
@@ -28,6 +30,11 @@ def main() -> int:
     query_filter = os.environ.get("ATLAS_OSM_QUERY_FILTER")
     if query_filter:
         queries = [path for path in queries if path.stem == query_filter or path.name == query_filter]
+    resume_from = args.resume_from
+    if resume_from:
+        queries, prior_results = apply_resume_from(queries, raw_dir, status_path, resume_from)
+    else:
+        prior_results = []
     if not queries:
         write_status_report(
             status_path,
@@ -35,13 +42,13 @@ def main() -> int:
                 "generated_at": now_iso(),
                 "overall_status": "failed",
                 "message": f"No OSM queries matched filter {query_filter!r}." if query_filter else "No OSM queries found.",
-                "results": [],
+                "results": prior_results,
             },
         )
         raise SystemExit(f"No OSM queries matched filter {query_filter!r}." if query_filter else "No OSM queries found.")
     query_context = build_query_context(settings)
     continue_on_failure = bool(settings.get("continueOnQueryFailure", False))
-    results: list[dict[str, object]] = []
+    results: list[dict[str, object]] = [*prior_results]
     had_failure = False
 
     for index, query_path in enumerate(queries):
@@ -138,8 +145,81 @@ def main() -> int:
     return 0
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Refresh OSM raw data from stored Overpass queries.")
+    parser.add_argument(
+        "--resume-from",
+        dest="resume_from",
+        help="Resume from the named query file or stem, reusing earlier successful raw outputs already on disk.",
+    )
+    return parser.parse_args()
+
+
 def write_status_report(path, payload: dict[str, object]) -> None:
     write_json(path, payload)
+
+
+def apply_resume_from(
+    queries: list, raw_dir, status_path, resume_from: str
+) -> tuple[list, list[dict[str, object]]]:
+    normalized_resume_from = normalize_query_identifier(resume_from)
+    resume_index = next(
+        (index for index, path in enumerate(queries) if normalize_query_identifier(path.name) == normalized_resume_from),
+        None,
+    )
+    if resume_index is None:
+        raise SystemExit(f"Cannot resume: no query matched {resume_from!r}.")
+
+    prior_queries = queries[:resume_index]
+    remaining_queries = queries[resume_index:]
+    prior_results = load_prior_results(status_path)
+    prior_results_by_query = {entry.get("query"): entry for entry in prior_results if entry.get("query")}
+    resumed_results: list[dict[str, object]] = []
+
+    for query_path in prior_queries:
+        output_path = raw_dir / f"{query_path.stem}.json"
+        if not output_path.exists():
+            raise SystemExit(
+                f"Cannot resume from {resume_from!r}: missing earlier raw output {output_path.relative_to(DATA_SOURCE_DIR)}."
+            )
+        preserved_result = preserve_prior_result(query_path.name, output_path, prior_results_by_query.get(query_path.name))
+        resumed_results.append(preserved_result)
+        print(f"RESUME PRESERVED: {query_path.name} -> {output_path.relative_to(DATA_SOURCE_DIR)}")
+
+    print(f"RESUME START: {remaining_queries[0].name}")
+    return remaining_queries, resumed_results
+
+
+def load_prior_results(status_path) -> list[dict[str, object]]:
+    if not status_path.exists():
+        return []
+    payload = json.loads(read_text(status_path))
+    results = payload.get("results", [])
+    return results if isinstance(results, list) else []
+
+
+def preserve_prior_result(query_name: str, output_path, previous_result: dict[str, object] | None) -> dict[str, object]:
+    payload = json.loads(read_text(output_path))
+    element_count = len(payload.get("elements", []))
+    result: dict[str, object] = {
+        "query": query_name,
+        "status": "preserved",
+        "output_file": str(output_path.relative_to(DATA_SOURCE_DIR)),
+        "element_count": element_count,
+    }
+    fetch_meta = payload.get("fetch_meta")
+    if fetch_meta:
+        result["fetch_meta"] = fetch_meta
+    if previous_result and previous_result.get("status"):
+        result["previous_status"] = previous_result.get("status")
+    return result
+
+
+def normalize_query_identifier(value: str) -> str:
+    normalized = value.strip()
+    if normalized.endswith(".overpassql"):
+        normalized = normalized.removesuffix(".overpassql")
+    return normalized
 
 
 def fetch_query_payload(

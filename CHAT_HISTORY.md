@@ -201,3 +201,20 @@ Make sure the fixed `16x16` tile structure is included in both fetching and the 
 - Extended fetch metadata so refresh outputs record the tile grid sequence used for each tiled query.
 - Applied the aligned fetch grid model to the heavy tiled Overpass queries.
 - Updated project docs so the fetch path and generated storage path are described as one coordinated spatial tiling model.
+
+## 2026-07-14 Resumable OSM Refresh
+
+### Session Summary
+
+Added a resumable OSM refresh mode so a failed run can continue from a specific query without redoing earlier successful downloads.
+
+### User Request
+
+Make the failed OSM refresh restartable from the beginning of `05-buildings-near-riverbanks` through a flag, while preserving the earlier successful query outputs and flowing them into the normal tile-building backend workflow.
+
+### Work Completed
+
+- Added `--resume-from` support to `pipeline/refresh_osm.py`.
+- Passed extra arguments through `./pipeline/atlas.sh refresh-osm`.
+- Added resume logic that validates earlier raw outputs exist, marks them as preserved, and restarts at the requested query.
+- Kept the normal `convert_osm.py` and `normalize_osm.py` steps after a resumed fetch so previously fetched raw files and newly fetched raw files are processed together into the generated tile outputs.

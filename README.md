@@ -17,6 +17,7 @@ In a second terminal:
 ```bash
 ./pipeline/atlas.sh validate
 ./pipeline/atlas.sh refresh-osm   # optional live OSM refresh
+./pipeline/atlas.sh refresh-osm --resume-from 05-buildings-near-riverbanks
 ./pipeline/atlas.sh release
 ```
 

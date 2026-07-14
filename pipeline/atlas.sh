@@ -6,6 +6,10 @@ cd "${ROOT_DIR}"
 
 COMMAND="${1:-}"
 
+if [[ $# -gt 0 ]]; then
+  shift
+fi
+
 run_python() {
   python3 "$@"
 }
@@ -18,7 +22,7 @@ case "${COMMAND}" in
     run_python pipeline/scan_for_secrets.py
     ;;
   refresh-osm)
-    run_python pipeline/refresh_osm.py
+    run_python pipeline/refresh_osm.py "$@"
     run_python pipeline/convert_osm.py
     run_python pipeline/normalize_osm.py
     ;;
@@ -63,6 +67,7 @@ case "${COMMAND}" in
 Usage:
   ./pipeline/atlas.sh validate
   ./pipeline/atlas.sh refresh-osm
+  ./pipeline/atlas.sh refresh-osm --resume-from 05-buildings-near-riverbanks
   ./pipeline/atlas.sh build-indexes
   ./pipeline/atlas.sh build-layers
   ./pipeline/atlas.sh build-timeline
