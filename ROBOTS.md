@@ -52,6 +52,12 @@ bash pipeline/atlas.sh refresh-osm   # optional, requires network access
 bash pipeline/atlas.sh release
 ```
 
+If a refresh previously failed partway through and `data-source/osm/raw/refresh-status.json` shows preserved earlier queries, prefer resuming from the failed query, for example:
+
+```bash
+./pipeline/atlas.sh refresh-osm --resume-from 05-buildings-near-riverbanks
+```
+
 6. If Node is available, also run:
 
 ```bash
@@ -63,7 +69,7 @@ npm run build
 
 ## Current Known State
 
-As of `2026-07-13`:
+As of `2026-07-14`:
 
 - Static deployable app exists in `app/`.
 - Packaged release exists in `releases/0.1.0/app`.
@@ -73,6 +79,12 @@ As of `2026-07-13`:
 - Large OSM-derived runtime layers now use manifest-driven chunk bundles with a hard validation size cap so tracked files stay Git-safe.
 - Large spatial runtime layers can also use tile manifests and tracked `_tiles/` files for bbox-driven loading.
 - Heavy Overpass fetches now follow the same explicit `16x16` first-pass grid model as generated spatial storage.
+- Refresh logging is timestamped and includes request-progress and terrain-coverage progress fields during OSM fetches.
+- Overpass retry/failure logging now uses compact normalized HTTP summaries instead of raw HTML response bodies.
+- Resumable refreshes preserve earlier successful raw OSM outputs and can restart from a named failed query.
+- The `05-buildings-near-riverbanks` fetch path is Berkel-corridor-aware: it uses a configurable name pattern and skips tile requests outside the derived corridor mask.
+- The `05-buildings-near-riverbanks` Overpass query now fetches buildings by bbox only; the final Berkel-distance test is applied locally during normalization using `01-waterways`.
+- Tiled OSM fetches now keep successful per-tile cache files under `data-source/osm/raw/tile-cache/`, so resumed runs can reuse already successful tile payloads inside a still-failing query.
 
 ## Update Rules
 

@@ -1,20 +1,20 @@
 {
   "type": "geojson_bundle",
-  "generatedAt": "2026-07-13T14:48:15Z",
+  "generatedAt": "2026-07-14T22:39:12Z",
   "layerId": "bridges.min",
-  "featureCount": 14144,
+  "featureCount": 14148,
   "chunkCount": 2,
   "chunkSizeLimitBytes": 4750000,
   "chunks": [
     {
       "url": "data/geo/_bundles/bridges.min/bridges.min-001.geojson",
-      "featureCount": 11174,
-      "bytes": 4749768
+      "featureCount": 11147,
+      "bytes": 4749845
     },
     {
       "url": "data/geo/_bundles/bridges.min/bridges.min-002.geojson",
-      "featureCount": 2970,
-      "bytes": 1289544
+      "featureCount": 3001,
+      "bytes": 1290730
     }
   ]
 }

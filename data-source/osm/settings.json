@@ -1,6 +1,7 @@
 {
   "berkelRegionBbox": [51.8, 5.9, 52.35, 7.2],
-  "riverbankBuildingDistanceM": 75,
+  "riverbankBuildingDistanceM": 250,
+  "riverCorridorNamePattern": "berkel",
   "overpassUrl": "https://overpass-api.de/api/interpreter",
   "overpassUrls": [
     "https://overpass-api.de/api/interpreter",
@@ -53,5 +54,5 @@
     "05-buildings-near-riverbanks"
   ],
   "userAgent": "BerkelRiverAtlas/0.1 (+https://github.com/louwersj/berkelriveratlas)",
-  "notes": "Buildings are included when they fall within the configured distance of the waterway centerline. This acts as a practical proxy for both river banks. Heavy tiled Overpass queries now start on the same explicit 16x16 first-pass grid model used by generated spatial storage."
+  "notes": "Buildings are included when they fall within the configured distance of the Berkel waterway centerline. This acts as a practical proxy for both river banks. Heavy tiled Overpass queries now start on the same explicit 16x16 first-pass grid model used by generated spatial storage."
 }

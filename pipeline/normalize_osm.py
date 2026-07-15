@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import math
+import re
 import shutil
 from pathlib import Path
 from typing import Any
@@ -30,6 +32,7 @@ def main() -> int:
     normalized_dir = DATA_SOURCE_DIR / "osm/normalized"
     geo_dir = DATA_SOURCE_DIR / "geo"
     app_geo_dir = APP_DIR / "data/geo"
+    settings_path = DATA_SOURCE_DIR / "osm/settings.json"
     ensure_directory(geo_dir)
     ensure_directory(app_geo_dir)
 
@@ -38,9 +41,10 @@ def main() -> int:
         print("No normalized OSM features found; preserved existing GeoJSON layers.")
         return 0
 
+    settings = json.loads(read_text(settings_path)) if settings_path.exists() else {}
     clear_generated_outputs(geo_dir)
     clear_generated_outputs(app_geo_dir)
-    layers = build_layers(features)
+    layers = build_layers(features, settings)
 
     write_layers(geo_dir, layers)
     sync_geo_directory(geo_dir, app_geo_dir)
@@ -59,7 +63,7 @@ def load_normalized_features(normalized_dir: Path) -> list[dict[str, Any]]:
     return features
 
 
-def build_layers(features: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+def build_layers(features: list[dict[str, Any]], settings: dict[str, Any]) -> dict[str, dict[str, Any]]:
     layers = {
         "base-roads.min.geojson": collection(),
         "base-paths.min.geojson": collection(),
@@ -72,6 +76,9 @@ def build_layers(features: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
         "boundaries.min.geojson": collection(),
         "buildings-near-riverbanks.geojson": collection(),
     }
+    river_name_pattern = str(settings.get("riverCorridorNamePattern", "berkel"))
+    riverbank_distance_m = float(settings.get("riverbankBuildingDistanceM", 75))
+    river_corridor = build_river_corridor(features, river_name_pattern)
 
     for feature in features:
         tags = feature.get("properties", {}).get("tags", {})
@@ -106,7 +113,10 @@ def build_layers(features: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
             layers["landuse.min.geojson"]["features"].append(feature)
 
         if query_name == "05-buildings-near-riverbanks" or ("building" in tags and geometry_type in {"Polygon", "MultiPolygon"}):
-            if query_name == "05-buildings-near-riverbanks":
+            if (
+                query_name == "05-buildings-near-riverbanks"
+                and building_is_within_river_distance(feature, river_corridor, riverbank_distance_m)
+            ):
                 layers["buildings-near-riverbanks.geojson"]["features"].append(feature)
 
         if tags.get("boundary") or feature.get("properties", {}).get("category") == "boundary":
@@ -128,6 +138,43 @@ def build_layers(features: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
 
 def collection() -> dict[str, Any]:
     return {"type": "FeatureCollection", "features": []}
+
+
+def build_river_corridor(features: list[dict[str, Any]], river_name_pattern: str) -> list[tuple[tuple[float, float], tuple[float, float]]]:
+    river_name_regex = re.compile(river_name_pattern, re.IGNORECASE)
+    segments: list[tuple[tuple[float, float], tuple[float, float]]] = []
+
+    for feature in features:
+        props = feature.get("properties", {})
+        if props.get("query_name") != "01-waterways":
+            continue
+        tags = props.get("tags", {})
+        if "waterway" not in tags:
+            continue
+        if not river_name_regex.search(str(props.get("name") or "")):
+            continue
+        segments.extend(geometry_segments(feature.get("geometry")))
+
+    return segments
+
+
+def building_is_within_river_distance(
+    feature: dict[str, Any],
+    river_corridor: list[tuple[tuple[float, float], tuple[float, float]]],
+    riverbank_distance_m: float,
+) -> bool:
+    if not river_corridor:
+        return False
+    geometry = feature.get("geometry")
+    if not geometry:
+        return False
+    sample_points = geometry_sample_points(geometry)
+    if not sample_points:
+        return False
+    for lon, lat in sample_points:
+        if point_within_distance_of_segments((lon, lat), river_corridor, riverbank_distance_m):
+            return True
+    return False
 
 
 def sync_geo_directory(source_dir: Path, target_dir: Path) -> None:
@@ -366,6 +413,98 @@ def collect_points(coordinates: Any, points: list[tuple[float, float]]) -> None:
     if isinstance(coordinates, list):
         for child in coordinates:
             collect_points(child, points)
+
+
+def geometry_segments(geometry: dict[str, Any] | None) -> list[tuple[tuple[float, float], tuple[float, float]]]:
+    if not geometry:
+        return []
+    geometry_type = geometry.get("type")
+    coordinates = geometry.get("coordinates")
+    if coordinates is None:
+        return []
+    if geometry_type == "LineString":
+        return coordinate_path_segments(coordinates)
+    if geometry_type == "MultiLineString":
+        segments: list[tuple[tuple[float, float], tuple[float, float]]] = []
+        for line in coordinates:
+            segments.extend(coordinate_path_segments(line))
+        return segments
+    if geometry_type == "Polygon":
+        segments: list[tuple[tuple[float, float], tuple[float, float]]] = []
+        for ring in coordinates:
+            segments.extend(coordinate_path_segments(ring))
+        return segments
+    if geometry_type == "MultiPolygon":
+        segments: list[tuple[tuple[float, float], tuple[float, float]]] = []
+        for polygon in coordinates:
+            for ring in polygon:
+                segments.extend(coordinate_path_segments(ring))
+        return segments
+    return []
+
+
+def coordinate_path_segments(path: list[Any]) -> list[tuple[tuple[float, float], tuple[float, float]]]:
+    points = [(float(point[0]), float(point[1])) for point in path if isinstance(point, list) and len(point) >= 2]
+    return list(zip(points, points[1:]))
+
+
+def geometry_sample_points(geometry: dict[str, Any]) -> list[tuple[float, float]]:
+    points: list[tuple[float, float]] = []
+    collect_points(geometry.get("coordinates"), points)
+    if not points:
+        return []
+    sample_points = list(points)
+    centroid = (
+        sum(point[0] for point in points) / len(points),
+        sum(point[1] for point in points) / len(points),
+    )
+    sample_points.append(centroid)
+    return sample_points
+
+
+def point_within_distance_of_segments(
+    point: tuple[float, float],
+    segments: list[tuple[tuple[float, float], tuple[float, float]]],
+    max_distance_m: float,
+) -> bool:
+    lon, lat = point
+    for start, end in segments:
+        if point_to_segment_distance_m(lon, lat, start, end) <= max_distance_m:
+            return True
+    return False
+
+
+def point_to_segment_distance_m(
+    lon: float,
+    lat: float,
+    start: tuple[float, float],
+    end: tuple[float, float],
+) -> float:
+    start_lon, start_lat = start
+    end_lon, end_lat = end
+    mean_lat = (lat + start_lat + end_lat) / 3
+
+    px, py = project_to_meters(lon, lat, mean_lat)
+    ax, ay = project_to_meters(start_lon, start_lat, mean_lat)
+    bx, by = project_to_meters(end_lon, end_lat, mean_lat)
+
+    abx = bx - ax
+    aby = by - ay
+    apx = px - ax
+    apy = py - ay
+    ab_length_squared = (abx * abx) + (aby * aby)
+    if ab_length_squared == 0:
+        return math.hypot(apx, apy)
+    t = max(0.0, min(1.0, ((apx * abx) + (apy * aby)) / ab_length_squared))
+    closest_x = ax + (t * abx)
+    closest_y = ay + (t * aby)
+    return math.hypot(px - closest_x, py - closest_y)
+
+
+def project_to_meters(lon: float, lat: float, mean_lat: float) -> tuple[float, float]:
+    meters_per_deg_lat = 111_320.0
+    meters_per_deg_lon = meters_per_deg_lat * math.cos(math.radians(mean_lat))
+    return lon * meters_per_deg_lon, lat * meters_per_deg_lat
 
 
 def normalize_properties(feature: dict[str, Any]) -> dict[str, Any]:

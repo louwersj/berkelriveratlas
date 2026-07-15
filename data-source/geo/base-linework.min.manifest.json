@@ -1,215 +1,215 @@
 {
   "type": "geojson_bundle",
-  "generatedAt": "2026-07-13T14:48:15Z",
+  "generatedAt": "2026-07-14T22:39:12Z",
   "layerId": "base-linework.min",
-  "featureCount": 369358,
+  "featureCount": 369423,
   "chunkCount": 41,
   "chunkSizeLimitBytes": 4750000,
   "chunks": [
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-001.geojson",
-      "featureCount": 8582,
-      "bytes": 4749569
+      "featureCount": 9067,
+      "bytes": 4749932
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-002.geojson",
-      "featureCount": 8748,
-      "bytes": 4749395
+      "featureCount": 9092,
+      "bytes": 4749691
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-003.geojson",
-      "featureCount": 8214,
-      "bytes": 4749874
+      "featureCount": 9075,
+      "bytes": 4749999
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-004.geojson",
-      "featureCount": 8578,
-      "bytes": 4749729
-    },
-    {
-      "url": "data/geo/_bundles/base-linework.min/base-linework.min-005.geojson",
-      "featureCount": 8161,
-      "bytes": 4749633
-    },
-    {
-      "url": "data/geo/_bundles/base-linework.min/base-linework.min-006.geojson",
-      "featureCount": 8519,
-      "bytes": 4748341
-    },
-    {
-      "url": "data/geo/_bundles/base-linework.min/base-linework.min-007.geojson",
-      "featureCount": 8392,
-      "bytes": 4749495
-    },
-    {
-      "url": "data/geo/_bundles/base-linework.min/base-linework.min-008.geojson",
-      "featureCount": 8571,
-      "bytes": 4749652
-    },
-    {
-      "url": "data/geo/_bundles/base-linework.min/base-linework.min-009.geojson",
-      "featureCount": 8765,
-      "bytes": 4749628
-    },
-    {
-      "url": "data/geo/_bundles/base-linework.min/base-linework.min-010.geojson",
-      "featureCount": 8945,
-      "bytes": 4749828
-    },
-    {
-      "url": "data/geo/_bundles/base-linework.min/base-linework.min-011.geojson",
-      "featureCount": 9091,
+      "featureCount": 8918,
       "bytes": 4749852
     },
     {
+      "url": "data/geo/_bundles/base-linework.min/base-linework.min-005.geojson",
+      "featureCount": 9095,
+      "bytes": 4749970
+    },
+    {
+      "url": "data/geo/_bundles/base-linework.min/base-linework.min-006.geojson",
+      "featureCount": 9046,
+      "bytes": 4749445
+    },
+    {
+      "url": "data/geo/_bundles/base-linework.min/base-linework.min-007.geojson",
+      "featureCount": 9033,
+      "bytes": 4749873
+    },
+    {
+      "url": "data/geo/_bundles/base-linework.min/base-linework.min-008.geojson",
+      "featureCount": 9054,
+      "bytes": 4749690
+    },
+    {
+      "url": "data/geo/_bundles/base-linework.min/base-linework.min-009.geojson",
+      "featureCount": 8817,
+      "bytes": 4749695
+    },
+    {
+      "url": "data/geo/_bundles/base-linework.min/base-linework.min-010.geojson",
+      "featureCount": 8852,
+      "bytes": 4749860
+    },
+    {
+      "url": "data/geo/_bundles/base-linework.min/base-linework.min-011.geojson",
+      "featureCount": 8808,
+      "bytes": 4749589
+    },
+    {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-012.geojson",
-      "featureCount": 9208,
-      "bytes": 4750034
+      "featureCount": 8890,
+      "bytes": 4749340
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-013.geojson",
-      "featureCount": 9521,
-      "bytes": 4749649
+      "featureCount": 9040,
+      "bytes": 4749901
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-014.geojson",
-      "featureCount": 9423,
-      "bytes": 4749882
+      "featureCount": 9211,
+      "bytes": 4749615
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-015.geojson",
-      "featureCount": 9556,
-      "bytes": 4749822
+      "featureCount": 8906,
+      "bytes": 4749842
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-016.geojson",
-      "featureCount": 9498,
-      "bytes": 4749871
-    },
-    {
-      "url": "data/geo/_bundles/base-linework.min/base-linework.min-017.geojson",
-      "featureCount": 9638,
-      "bytes": 4749940
-    },
-    {
-      "url": "data/geo/_bundles/base-linework.min/base-linework.min-018.geojson",
-      "featureCount": 9627,
-      "bytes": 4749529
-    },
-    {
-      "url": "data/geo/_bundles/base-linework.min/base-linework.min-019.geojson",
-      "featureCount": 9705,
-      "bytes": 4749673
-    },
-    {
-      "url": "data/geo/_bundles/base-linework.min/base-linework.min-020.geojson",
-      "featureCount": 9687,
-      "bytes": 4749699
-    },
-    {
-      "url": "data/geo/_bundles/base-linework.min/base-linework.min-021.geojson",
-      "featureCount": 9786,
-      "bytes": 4749845
-    },
-    {
-      "url": "data/geo/_bundles/base-linework.min/base-linework.min-022.geojson",
-      "featureCount": 8488,
+      "featureCount": 9322,
       "bytes": 4749740
     },
     {
+      "url": "data/geo/_bundles/base-linework.min/base-linework.min-017.geojson",
+      "featureCount": 9145,
+      "bytes": 4749786
+    },
+    {
+      "url": "data/geo/_bundles/base-linework.min/base-linework.min-018.geojson",
+      "featureCount": 9294,
+      "bytes": 4749925
+    },
+    {
+      "url": "data/geo/_bundles/base-linework.min/base-linework.min-019.geojson",
+      "featureCount": 9034,
+      "bytes": 4749890
+    },
+    {
+      "url": "data/geo/_bundles/base-linework.min/base-linework.min-020.geojson",
+      "featureCount": 9010,
+      "bytes": 4749610
+    },
+    {
+      "url": "data/geo/_bundles/base-linework.min/base-linework.min-021.geojson",
+      "featureCount": 9579,
+      "bytes": 4749640
+    },
+    {
+      "url": "data/geo/_bundles/base-linework.min/base-linework.min-022.geojson",
+      "featureCount": 9213,
+      "bytes": 4749803
+    },
+    {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-023.geojson",
-      "featureCount": 8272,
-      "bytes": 4749132
+      "featureCount": 9142,
+      "bytes": 4749633
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-024.geojson",
-      "featureCount": 8193,
-      "bytes": 4749335
+      "featureCount": 9061,
+      "bytes": 4749715
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-025.geojson",
-      "featureCount": 8451,
-      "bytes": 4749582
+      "featureCount": 9279,
+      "bytes": 4749690
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-026.geojson",
-      "featureCount": 8692,
-      "bytes": 4749620
+      "featureCount": 9071,
+      "bytes": 4749722
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-027.geojson",
-      "featureCount": 8359,
-      "bytes": 4750007
+      "featureCount": 8330,
+      "bytes": 4749676
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-028.geojson",
-      "featureCount": 8605,
-      "bytes": 4749760
+      "featureCount": 8551,
+      "bytes": 4750030
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-029.geojson",
-      "featureCount": 8942,
-      "bytes": 4749836
+      "featureCount": 8685,
+      "bytes": 4749661
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-030.geojson",
-      "featureCount": 8869,
-      "bytes": 4749822
+      "featureCount": 8700,
+      "bytes": 4749684
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-031.geojson",
-      "featureCount": 8920,
-      "bytes": 4749763
+      "featureCount": 8714,
+      "bytes": 4748616
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-032.geojson",
-      "featureCount": 9250,
-      "bytes": 4750022
+      "featureCount": 9114,
+      "bytes": 4749930
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-033.geojson",
-      "featureCount": 9267,
-      "bytes": 4749593
+      "featureCount": 8822,
+      "bytes": 4749858
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-034.geojson",
-      "featureCount": 9356,
-      "bytes": 4749733
+      "featureCount": 9387,
+      "bytes": 4749389
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-035.geojson",
-      "featureCount": 9503,
-      "bytes": 4749857
+      "featureCount": 9155,
+      "bytes": 4749922
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-036.geojson",
-      "featureCount": 9635,
-      "bytes": 4749969
+      "featureCount": 8734,
+      "bytes": 4749921
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-037.geojson",
-      "featureCount": 9786,
-      "bytes": 4749701
+      "featureCount": 8794,
+      "bytes": 4749654
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-038.geojson",
-      "featureCount": 9925,
-      "bytes": 4750024
+      "featureCount": 9694,
+      "bytes": 4749795
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-039.geojson",
-      "featureCount": 8581,
-      "bytes": 4749739
+      "featureCount": 8584,
+      "bytes": 4750017
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-040.geojson",
-      "featureCount": 9656,
-      "bytes": 4749809
+      "featureCount": 9643,
+      "bytes": 4749667
     },
     {
       "url": "data/geo/_bundles/base-linework.min/base-linework.min-041.geojson",
-      "featureCount": 8393,
-      "bytes": 4038669
+      "featureCount": 8462,
+      "bytes": 4070184
     }
   ]
 }

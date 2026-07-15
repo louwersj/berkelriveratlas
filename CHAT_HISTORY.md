@@ -220,3 +220,108 @@ Make the failed OSM refresh restartable from the beginning of `05-buildings-near
 - Passed extra arguments through `./pipeline/atlas.sh refresh-osm`.
 - Added resume logic that validates earlier raw outputs exist, marks them as preserved, and restarts at the requested query.
 - Kept the normal `convert_osm.py` and `normalize_osm.py` steps after a resumed fetch so previously fetched raw files and newly fetched raw files are processed together into the generated tile outputs.
+
+## 2026-07-14 Timestamped Refresh Progress
+
+### Session Summary
+
+Added timestamped OSM refresh logging with request and terrain coverage progress, and confirmed the current failed refresh should be resumed from query `05`.
+
+### User Request
+
+Add a timestamp to each refresh status line, calculate request-done and terrain-covered progress, and clarify what to do after `OSM refresh failed on 05-buildings-near-riverbanks.overpassql`.
+
+### Work Completed
+
+- Reworked `pipeline/refresh_osm.py` so refresh output now goes through a centralized timestamped log formatter.
+- Added structured progress tracking for:
+  - completed requests versus currently planned requests
+  - covered terrain percentage across the query bbox
+- Applied the new logging format to query starts, resume events, tile fetches, retries, subdivisions, failures, interrupts, and final refresh status.
+- Kept terrain coverage based on successfully completed tile areas so empty-but-successful tiles still count as covered, while failed tiles do not.
+- Verified the refresh script parses cleanly and `bash pipeline/atlas.sh validate` still passes.
+- Confirmed from `data-source/osm/raw/refresh-status.json` that queries `01` through `04` are preserved and the failed query is `05-buildings-near-riverbanks.overpassql`.
+
+### Operator Notes
+
+- To continue from the current failure point, run:
+  - `./pipeline/atlas.sh refresh-osm --resume-from 05-buildings-near-riverbanks`
+- The resumed run preserves existing raw outputs for `01` through `04` and restarts the fetch sequence at `05`.
+
+## 2026-07-14 Berkel Corridor Tile Filtering
+
+### Session Summary
+
+Reduced unnecessary `05-buildings-near-riverbanks` tile fetches by constraining both the Overpass query and the tile scheduler to the Berkel corridor rather than every waterway in the regional bbox.
+
+### User Request
+
+Prevent fetching tiles that are technically inside the global grid but cannot contain buildings within the configured riverbank distance.
+
+### Work Completed
+
+- Updated `data-source/osm/queries/05-buildings-near-riverbanks.overpassql` so the source waterway set is limited to Berkel-named river and canal features instead of all waterways.
+- Added `riverCorridorNamePattern` to `data-source/osm/settings.json` so the corridor selector is configurable.
+- Updated `pipeline/refresh_osm.py` to build a Berkel corridor tile mask from `osm/raw/01-waterways.json`.
+- Made the tiled fetcher skip tiles outside that corridor mask and report them as `TILE_SKIPPED` instead of querying them.
+- Kept progress reporting aligned with the filtered target area so request and coverage percentages only track relevant tiles.
+
+### Verification
+
+- Local dry verification showed the initial `05` root-tile plan shrinking from `256` tiles to `28` tiles on the current data.
+- `bash pipeline/atlas.sh validate` still passes.
+
+## 2026-07-14 Buildings Fetch Strategy Hardening
+
+### Session Summary
+
+Reworked the failing `05-buildings-near-riverbanks` fetch path so Overpass no longer has to evaluate the expensive river-distance geometry server-side, and added per-tile caching so resumed runs can reuse already successful `05` subtiles.
+
+### User Request
+
+Investigate why the buildings-near-riverbanks refresh keeps failing and implement a better fetching strategy.
+
+### Failure Diagnosis
+
+- The run was still failing on a very small depth-3 tile after repeated `429`, `504`, and socket timeout errors.
+- That indicated the main problem was the Overpass query shape itself, especially the server-side `around(...:distance)` evaluation, not only the tile size.
+
+### Work Completed
+
+- Changed `data-source/osm/queries/05-buildings-near-riverbanks.overpassql` to fetch plain building geometry by bbox instead of asking Overpass to compute the Berkel distance filter.
+- Kept the Berkel corridor tile mask in `pipeline/refresh_osm.py` so only corridor-relevant tiles are requested in the first place.
+- Added local Berkel-distance filtering in `pipeline/normalize_osm.py`, using the already-downloaded `01-waterways` geometry and the configured `riverbankBuildingDistanceM`.
+- Added per-tile cache files under `data-source/osm/raw/tile-cache/` so successful tiled responses can be reused on the next resumed run instead of being refetched.
+- Added `TILE_CACHED` logging for reused tile payloads.
+
+### Verification
+
+- `bash pipeline/atlas.sh validate` still passes.
+- A local cache round-trip test for the new tile cache path passed.
+
+## 2026-07-15 Compact Overpass Error Logging
+
+### Session Summary
+
+Shortened noisy Overpass retry and failure messages so stdout stays readable during long refresh runs.
+
+### User Request
+
+Replace long retry lines that included raw HTML error bodies with compact human-readable error summaries.
+
+### Work Completed
+
+- Updated `pipeline/refresh_osm.py` so `HTTPError` responses are summarized into short normalized messages instead of embedding HTML response bodies.
+- Added compact status mappings for common retryable Overpass responses:
+  - `429` -> `rate limited`
+  - `502` -> `bad gateway`
+  - `503` -> `service unavailable`
+  - `504` -> `gateway timeout`
+- Kept the endpoint host in the message so mirror-specific issues are still visible in stdout.
+
+### Verification
+
+- `bash pipeline/atlas.sh validate` still passes.
+- Local summary checks confirmed outputs like:
+  - `HTTP 504 gateway timeout from z.overpass-api.de`
+  - `HTTP 429 rate limited from overpass-api.de`
